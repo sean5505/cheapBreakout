@@ -57,7 +57,7 @@ export default function MouseControl(props: Props) {
   };
 
   useEffect(() => {
-    if (isGameOver) {
+    if (isGameOver || isGamePaused) {
       return;
     } else {
       startMouseMovement();

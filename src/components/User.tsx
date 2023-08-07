@@ -56,7 +56,7 @@ export default function User(props: Props) {
   };
 
   useEffect(() => {
-    if (isGameOver ) {
+    if (isGameOver || isGamePaused ) {
       return;
     } else {
       document.addEventListener("keydown", moveUser);
