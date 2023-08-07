@@ -297,8 +297,7 @@ export const useGameStore = create<GeneralData>((set, get) => ({
     } else if (
       gameBlocks.length === 0 &&
       isLevelOneCleared &&
-      isLevelTwoCleared &&
-      !isLevelThreeCleared
+      isLevelTwoCleared 
     ) {
       setTimeout(() => {
         gameAudio.gameComplete.play();
