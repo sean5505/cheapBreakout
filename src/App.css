@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-weight: bold;
+}
+
+input {
+  border-color: red;
+  border-radius: 20px;
+  text-align: center;
+}
+
+textarea {
+  max-width: 20em;
+  min-height: 8em;
+  max-height: 10em;
+}
+
+@media (max-width: 768px) {
+  textarea {
+    max-width: 12em;
+  }
+  input {
+    width: 12em;
+  }
+}
