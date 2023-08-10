@@ -19,19 +19,20 @@
 
 ## Overview
 
-A cheap remake of Atari Breakout, a game with the goal of clearing all blocks without letting the ball hit the horizon. As the ball collides with the blocks, the block vanishes and the user earns points. The speed at which the ball moves can be adjusted by the difficulty setting. As a result, playing at a higher difficulty level allows the user to accumulate additional points.
+A cheap remake of Atari Breakout, a game with the goal of clearing all blocks without letting the ball hit the horizon. As the ball collides with the blocks, the block vanishes and the user earns points. The speed at which the ball moves can be adjusted by the difficulty setting. As a result, playing at a higher difficulty level allows the user to accumulate additional points. In addition, the user has an option to utilize a laser, tremondously assisting with game progression. 
 
 ![cheapBreakout](https://github.com/sean5505/breakoutUploadTest/assets/110543268/614a116f-bc0a-4f64-97da-7776bed4b603)
 
 ### Technologies
-- REACT
-- TYPESCRIPT
-- TAILWINDCSS
-- ZUSTAND
+- Vite
+- React
+- TypeScript
+- TailwindCSS
+- Zustand
 
 ## Development
 
-This project was a remake of my [First Project](https://github.com/sean5505/breakoutUploadTest), which was created with the HTML, CSS, and JavaScript, the fundamentals of web development. However, I wanted to rebuild the project and take advantage of different technologies, thus enhancing my comprehension of concepts such as the advantages React offers over Vanilla Javascript. Futhermore, I intend to progressively improve upon the project and sought to incorporate industry leading technologies. 
+This project was a remake of my [First Project](https://github.com/sean5505/breakoutUploadTest), which was created with the HTML, CSS, and JavaScript, the fundamentals of web development. However, I wanted to rebuild the project and take advantage of different technologies, thus enhancing my comprehension of concepts such as the advantages React offers over Vanilla Javascript. Futhermore, I intend to progressively improve upon the project and sought to incorporate industry leading technologies to assist me with iterative development . 
 
 To begin, I created a basic wireframe using Figma as a reference for the intended design of the product. Throughout the developmental process, this design served as a blueprint for what I wanted the end product to achieve.
  ![breakoutDesign](https://github.com/sean5505/breakoutUploadTest/assets/110543268/2a6bff98-3c04-41ac-87c0-c3a58b98ae90)
@@ -44,12 +45,13 @@ I employed `React` to take advantage of its inherent code splitting abilities, a
 
 I opted to use `Vite` as the build tool due to its simplicity in generating Single Page Applications and its ability to lauch a fast development server, ultimately decreasing development time.
 
-I opted to use `TypeScript` to stritcly state what value should be recived by each variable as I intend to imporve and build upon the project in the future. In addition, I wanted to take advantage of its static checking capabilities to catch errors in implementation.
+I made the decision to use `TypeScript` over Javascript to stritcly state what value should be recived by each variable as I intend to imporve and build upon the project in the future. In addition, I wanted to take advantage of its static checking capabilities to catch errors with execution.
 
-I opted to utilize `TailwindCSS` for styling to take advantage of its utility classes, enabling me to focus moreso on the functionality of the project.
+For styling, I used `TailwindCSS` to take advantage of its utility classes, enabling me to focus moreso on the functionality of the project.
 
-I opted to use `Zustand` as the state managemnet tool primarily because I had no prior experience with the tool and sought to gain hands-on experience. In comparison with Redux, it required minimal boilerplate code and allowed me to get/update state with ease.
+I opted to use `Zustand` as the state managemnet tool primarily because I had no prior experience with the tool and sought to gain hands-on experience. In comparison with Redux, it required minimal boilerplate code and allowed me to facilitate state updates with ease.
 
+Overall, leveraging these different technologies enabled me to create a well-organized application poised for seamless future updates.
 
 ## Challenges
 
@@ -63,12 +65,11 @@ This project was primarily built with Typescript, which assisted with catching e
 
 ## Conclusion
 
-Although the project was a rebuild of a previous project, it required many different countermeasures to allievate problems brought up by the migration, such taking advantage of Zustand  to facilitate state updates across the application, utilizing the modern approach of Functional Components over Class Components, and debugging the code during the rebuild and integration of new features. Ultimately, this project...  enhancing my knowledge of React. The knowledge and experience accquired will be prove to be beneficial in future projects.
-
+Although the project was a rebuild of a previous project, it required many different countermeasures to allievate problems brought up by the migration, such taking advantage of Zustand  to facilitate state updates across the application, utilizing the modern approach of Functional Components over Class Components, and debugging the code during the rebuild and integration of new features. Unlike the original, and using React, I was able to keep a cleaner code structure, facilitating smoother project enhancements. Ultimately, this project provided a significant opportunity for me to enhance my proficiency in React, contributing to the expansion of my front-end expertise. The knowledge and experience accquired will be prove to be beneficial in future projects.
 
 ---
 ## Future Plans
-- Testing
+- **Testing** 
 - Code Cleanup/ Organizational Improvements
-- Conditional Powerups, limited by a set amount of time
-- Playable on Mobile?
+- Conditional Powerups
+- Mobile Design?
