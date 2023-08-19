@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, vi } from "vitest";
-import { render, screen, RenderResult, fireEvent} from "@testing-library/react";
+import { render, RenderResult, fireEvent} from "@testing-library/react";
 
 import App from "./App";
 import { useGameStore } from "./stateManagement/Store";

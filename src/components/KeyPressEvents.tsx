@@ -12,7 +12,6 @@ export default function KeyboardEvents() {
     isLaserDisabled,
     showFeedbackForm,
     gameAudio,
-    isLevelThreeCleared,
   } = useGameStore((state) => ({
     isGameOver: state.isGameOver,
     ballMovement: state.ballMovement,
