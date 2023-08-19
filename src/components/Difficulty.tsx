@@ -12,13 +12,13 @@ const options: DifficultyOptions[] = [
 ];
 
 export default function Difficulty() {
-  const [selectedDifficulty, setSelectedDifficulty] = useState(options[1].value); // Set the default value here
+  const [selectedDifficulty, setSelectedDifficulty] = useState(options[1].value); 
   const [scoreMultiply, setScoreMultiply] = useState(options[1].scoreMultiply)
   
   const handleSelectChange = (e: any) => {
     const selectedIndex = e.target.selectedIndex;
-  setSelectedDifficulty(e.target.value);
-  setScoreMultiply(options[selectedIndex].scoreMultiply);
+    setSelectedDifficulty(e.target.value);
+    setScoreMultiply(options[selectedIndex].scoreMultiply);
 
   };
 
@@ -28,7 +28,8 @@ export default function Difficulty() {
 
   return (
     <>
-      <form className="flex flex-col ">
+      <form
+      data-testid= "DifficultyForm" className="flex flex-col ">
         <label htmlFor="difficulty">Select Difficulty:</label>
         <select
           id="difficulty"

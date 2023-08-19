@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
 import { useGameStore } from "../../stateManagement/Store";
-import GameStats from "../../lib/GameStatsHighlight";
+import GameStatsHighlight from "../../lib/GameStatsHighlight";
 
 export default function GameTimer() {
-
   const [timer, setTimer] = useState(0);
   const ballMovement = useGameStore((state) => state.ballMovement);
-  const {seconds, updateSeconds} = useGameStore((state) => ({
+  const { seconds, updateSeconds } = useGameStore((state) => ({
     seconds: state.seconds,
-    updateSeconds: state.updateSeconds
-  }))
+    updateSeconds: state.updateSeconds,
+  }));
 
   useEffect(() => {
     if (ballMovement) {
+      
       setTimer(
         setInterval(() => {
           updateSeconds();
@@ -33,5 +33,5 @@ export default function GameTimer() {
       .padStart(2, "0")}`;
   };
 
-  return <GameStats label="Time:">{formatTime(seconds)}</GameStats>;
+  return <GameStatsHighlight label="Time:">{formatTime(seconds)}</GameStatsHighlight>;
 }

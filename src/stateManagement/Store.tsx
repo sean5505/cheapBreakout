@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { Block } from "../lib/Types";
+
 //split store apart for readability and organizational purposes, incorrect usage of store....
-const userStart = [260, 10];
+const userStart = [275, 10];
 
 interface GeneralData {
   gameAudio: any;
@@ -22,6 +23,7 @@ interface GeneralData {
   isGamePaused: boolean | null;
   userCurrentPosition: number[];
   userBlockWidth: number;
+  userBlockHeight: number;
   ballDiameter: number;
   totalBlocks: null | number;
   blocksCleared: number;
@@ -34,7 +36,7 @@ interface GeneralData {
   laserDiameter: number;
   xDirection: number;
   yDirection: number;
-  ballMovement: null | number;
+  ballMovement: null | number | NodeJS.Timer;
   drawBall: () => void;
   moveBall: () => void;
   attachBall: () => void;
@@ -43,6 +45,7 @@ interface GeneralData {
   checkForLaserCollisions: () => void;
   checkBlocksArray: () => void;
   startGame: () => void;
+  pauseGame: () => void;
   restartGame: () => void;
   score: number;
   scoreMultiply: number;
@@ -103,6 +106,7 @@ export const useGameStore = create<GeneralData>((set, get) => ({
   isGamePaused: false,
   userCurrentPosition: userStart,
   userBlockWidth: 50,
+  userBlockHeight: 10,
   ballDiameter: 15,
   totalBlocks: null,
   blocksCleared: 0,
@@ -119,99 +123,125 @@ export const useGameStore = create<GeneralData>((set, get) => ({
   drawBall: () => {},
   attachBall: () => {
     set((state) => {
-      if (!state.ballMovement && state.ballStartID) {
+      const { ballMovement, ballStartID, userCurrentPosition, drawBall } =
+        state;
+      if (!ballMovement && ballStartID) {
         const newBallStart = [
-          state.userCurrentPosition[0] + 17,
-          state.userCurrentPosition[1] + 10,
+          userCurrentPosition[0] + 17,
+          userCurrentPosition[1] + 10,
         ];
-        state.drawBall();
-        return { ballCurrentPosition: newBallStart };
+        drawBall();
+        return { ...state, ballCurrentPosition: newBallStart };
       }
       return state;
     });
   },
-  moveBall: () => {},
+  moveBall: () => {
+    const {
+      xDirection,
+      yDirection,
+      ballCurrentPosition,
+      drawBall,
+      checkForCollisions,
+      ballMovement
+    } = useGameStore.getState();
+    const updatedBallPosition = [
+      ballCurrentPosition[0] + xDirection,
+      ballCurrentPosition[1] + yDirection,
+    ];
+    set({
+      ballCurrentPosition: updatedBallPosition,
+    });
+    drawBall()
+    checkForCollisions()
+
+    if(ballCurrentPosition[1] <= 0){
+      clearInterval(ballMovement as number); // hmm
+    } 
+    
+  },
   changeDirection: () => {
     set((state) => {
-      if (state.xDirection == 2 && state.yDirection == 2) {
-        return { yDirection: -2 };
+      const { xDirection, yDirection } = state;
+      if (xDirection == 2 && yDirection == 2) {
+        return { ...state, yDirection: -2 };
       }
-      if (state.xDirection == 2 && state.yDirection == -2) {
-        return { xDirection: -2 };
+      if (xDirection == 2 && yDirection == -2) {
+        return { ...state, xDirection: -2 };
       }
-      if (state.xDirection == -2 && state.yDirection == -2) {
-        return { yDirection: 2 };
+      if (xDirection == -2 && yDirection == -2) {
+        return { ...state, yDirection: 2 };
       }
-      if (state.xDirection == -2 && state.yDirection == 2) {
-        return { xDirection: 2 };
+      if (xDirection == -2 && yDirection == 2) {
+        return { ...state, xDirection: 2 };
       }
       return state;
     });
   },
 
   checkForCollisions: () => {
-    set(() => {
-      const {
-        ballCurrentPosition,
-        boardWidth,
-        ballDiameter,
-        boardHeight,
-        changeDirection,
-        userCurrentPosition,
-        userBlockWidth,
-        gameBlocks,
-        ballMovement,
-        score,
-        scoreMultiply,
-        checkBlocksArray,
-        blocksCleared,
-        gameAudio,
-      } = useGameStore.getState();
-      // wall collisions
-      if (
-        ballCurrentPosition[0] >= boardWidth - ballDiameter ||
-        ballCurrentPosition[1] >= boardHeight - ballDiameter ||
-        ballCurrentPosition[0] <= 0
-      ) {
-        changeDirection();
-        gameAudio.wallHit.play();
-      }
+    const {
+      ballCurrentPosition,
+      boardWidth,
+      ballDiameter,
+      boardHeight,
+      changeDirection,
+      userCurrentPosition,
+      userBlockWidth,
+      userBlockHeight,
+      gameBlocks,
+      ballMovement,
+      score,
+      scoreMultiply,
+      checkBlocksArray,
+      blocksCleared,
+      gameAudio,
+    } = useGameStore.getState();
+    // wall collisions
+    if (
+      ballCurrentPosition[0] >= boardWidth - ballDiameter ||
+      ballCurrentPosition[1] >= boardHeight - ballDiameter ||
+      ballCurrentPosition[0] <= 0
+    ) {
+      changeDirection();
+      gameAudio.wallHit.play();
+    }
 
-      // user collisions
+    // user collisions
+    if (
+      ballCurrentPosition[0] >= userCurrentPosition[0] &&
+      ballCurrentPosition[0] <= userCurrentPosition[0] + userBlockWidth &&
+      ballCurrentPosition[1] >= userCurrentPosition[1] &&
+      ballCurrentPosition[1] <= userCurrentPosition[1] + userBlockHeight
+    ) {
+      changeDirection();
+      gameAudio.userHit.play();
+    }
+    let updatedBlocks;
+    // block collisions
+    gameBlocks.forEach((block) => {
       if (
-        ballCurrentPosition[0] >= userCurrentPosition[0] &&
-        ballCurrentPosition[0] <= userCurrentPosition[0] + userBlockWidth &&
-        ballCurrentPosition[1] >= userCurrentPosition[1] &&
-        ballCurrentPosition[1] <= userCurrentPosition[1] + 10
+        ballCurrentPosition[0] >= block.bottomLeft[0] &&
+        ballCurrentPosition[0] <= block.bottomRight[0] &&
+        ballCurrentPosition[1] + ballDiameter >= block.bottomLeft[1] &&
+        ballCurrentPosition[1] <= block.topLeft[1]
       ) {
+        updatedBlocks = gameBlocks.filter((b) => b.id !== block.id);
         changeDirection();
-        gameAudio.userHit.play();
+        gameAudio.blockHit.play();
+        set({
+          totalBlocks: updatedBlocks.length,
+          blocksCleared: blocksCleared + 1,
+          gameBlocks: updatedBlocks,
+          score: score + 100 * scoreMultiply,
+        });
       }
-
-      // block collisions
-      gameBlocks.forEach((block) => {
-        if (
-          ballCurrentPosition[0] >= block.bottomLeft[0] &&
-          ballCurrentPosition[0] <= block.bottomRight[0] &&
-          ballCurrentPosition[1] + ballDiameter >= block.bottomLeft[1] &&
-          ballCurrentPosition[1] <= block.topLeft[1]
-        ) {
-          const updatedBlocks = gameBlocks.filter((b) => b.id !== block.id);
-          changeDirection();
-          gameAudio.blockHit.play();
-          set({
-            totalBlocks: updatedBlocks.length,
-            blocksCleared: blocksCleared + 1,
-            gameBlocks: updatedBlocks,
-            score: score + 100 * scoreMultiply,
-          });
-        }
-      });
 
       // game over
       if (ballCurrentPosition[1] <= 0) {
         clearInterval(ballMovement as number);
         set({ ballMovement: null });
+        gameAudio.gameMusic.pause();
         setTimeout(() => {
           set({ isGameOver: true });
           gameAudio.gameOver.play();
@@ -221,6 +251,7 @@ export const useGameStore = create<GeneralData>((set, get) => ({
       return { xDirection: get().xDirection, yDirection: get().yDirection };
     });
   },
+
   checkForLaserCollisions: () => {
     const {
       boardHeight,
@@ -232,7 +263,6 @@ export const useGameStore = create<GeneralData>((set, get) => ({
       scoreMultiply,
       checkBlocksArray,
       blocksCleared,
-
       blockWidth,
     } = useGameStore.getState();
 
@@ -240,7 +270,6 @@ export const useGameStore = create<GeneralData>((set, get) => ({
     if (laserCurrentPosition) {
       gameBlocks.forEach((block) => {
         if (
-          // -10 is really ugly fix later
           laserCurrentPosition[0] + blockWidth - laserDiameter >=
             block.bottomLeft[0] &&
           laserCurrentPosition[0] + blockWidth - laserDiameter <=
@@ -250,7 +279,6 @@ export const useGameStore = create<GeneralData>((set, get) => ({
         ) {
           const updatedBlocks = gameBlocks.filter((b) => b.id !== block.id);
           clearInterval(laserID as number);
-
           set({
             gameBlocks: updatedBlocks,
             totalBlocks: updatedBlocks.length,
@@ -259,19 +287,17 @@ export const useGameStore = create<GeneralData>((set, get) => ({
             laserID: null,
             score: score + 50 * scoreMultiply,
           });
-          return;
         }
       });
       // board collision
       if (laserCurrentPosition[1] >= boardHeight - laserDiameter) {
         set({ laserCurrentPosition: null, showLaser: false });
       }
+      checkBlocksArray();
     }
-    checkBlocksArray();
   },
   checkBlocksArray: () => {
-    //extended conditions instead of  creating a new array for the levelblocks?
-
+    //extended conditions instead of creating a new array pertaining to each levelblocks?
     const {
       gameBlocks,
       isLevelOneCleared,
@@ -279,49 +305,44 @@ export const useGameStore = create<GeneralData>((set, get) => ({
       isLevelThreeCleared,
       ballMovement,
       gameAudio,
+      level,
     } = useGameStore.getState();
     console.log(
       `isLevelOneCleared: ${isLevelOneCleared} isLevelTwoCleared: ${isLevelTwoCleared} isLevelThreeCleared: ${isLevelThreeCleared}`
     );
-    if (gameBlocks.length === 0 && !isLevelOneCleared && !isLevelTwoCleared) {
-      console.log(`level one cleared`);
-      set({ isLevelOneCleared: true, level: 2 });
-    } else if (
-      gameBlocks.length === 0 &&
-      isLevelOneCleared &&
-      !isLevelTwoCleared &&
-      !isLevelThreeCleared
-    ) {
-      console.log(`level two cleared`);
-      set({ isLevelTwoCleared: true, level: 3 });
-    } else if (
-      gameBlocks.length === 0 &&
-      isLevelOneCleared &&
-      isLevelTwoCleared 
-    ) {
-      setTimeout(() => {
-        gameAudio.gameComplete.play();
-        clearInterval(ballMovement as number);
-        set({ isLevelThreeCleared: true, ballMovement: null });
-      }, 700);
+    if (gameBlocks.length === 0) {
+      if (!isLevelOneCleared && level == 1) {
+        set({ isLevelOneCleared: true, level: 2 });
+      } else if (isLevelOneCleared && !isLevelTwoCleared && level == 2) {
+        set({ isLevelTwoCleared: true, level: 3 });
+      } else if (
+        gameBlocks.length === 0 &&
+        isLevelOneCleared &&
+        isLevelTwoCleared &&
+        level == 3
+      ) {
+        setTimeout(() => {
+          gameAudio.gameComplete.play();
+          clearInterval(ballMovement as number);
+          set({ isLevelThreeCleared: true, ballMovement: null });
+        }, 700);
+      }
     }
   },
   startGame: () => {
-    const { ballMovement, moveBall, ballSpeed, closeModal } =
-      useGameStore.getState();
-    if (ballMovement) {
-      clearInterval(ballMovement as number);
-      set({ ballMovement: null, isGamePaused: true });
-    } else {
-      const timerID = setInterval(moveBall, ballSpeed);
-      closeModal(); // if the game is continued after being paused by click keyPress, set the value of isModalOpen to false for laser functionality to prevail
-      set({ ballMovement: timerID, isGamePaused: false });
-    }
-    set({ ballStartID: false });
-    return () => {
-      clearInterval(ballMovement as number);
-    };
+    const { moveBall, ballSpeed, closeModal} = useGameStore.getState();
+    const timerID = setInterval(moveBall, ballSpeed);
+    closeModal(); // if the game is continued after being paused by click keyPress, set the value of isModalOpen to false for laser functionality to prevail
+    set({ ballMovement: timerID, isGamePaused: false, ballStartID: false });
   },
+
+  pauseGame: () => {
+    const { ballMovement } = useGameStore.getState();
+    console.log("function called");
+    clearInterval(ballMovement as number);
+    set({ ballMovement: null, isGamePaused: true });
+  },
+
   restartGame: () => {
     window.location.reload();
   },

@@ -6,9 +6,8 @@ type Props = {
 };
 
 export default function Ball(props: Props) {
-  const { ballCurrentPosition, checkForCollisions } = useGameStore((state) => ({
+  const { ballCurrentPosition } = useGameStore((state) => ({
     ballCurrentPosition: state.ballCurrentPosition,
-    checkForCollisions: state.checkForCollisions,
   }));
 
   const drawBallF = () => {
@@ -22,32 +21,15 @@ export default function Ball(props: Props) {
     drawBallF();
   }, [ballCurrentPosition]);
 
-  const moveBallF = () => {
-    const { xDirection, yDirection, ballCurrentPosition } =
-      useGameStore.getState();
-
-    const updatedBallPosition = [
-      ballCurrentPosition[0] + xDirection,
-      ballCurrentPosition[1] + yDirection,
-    ];
-
-    useGameStore.setState({
-      ballCurrentPosition: updatedBallPosition,
-    });
-
-    drawBallF();
-    checkForCollisions();
-  };
-
   useEffect(() => {
     useGameStore.setState({ drawBall: drawBallF });
-    useGameStore.setState({ moveBall: moveBallF });
   }, []);
 
   return (
     <>
       <div
         ref={props.ballRef}
+        data-testid="ball"
         className="h-4 w-4 bg-red-600 absolute rounded-full"
       ></div>
     </>

@@ -8,7 +8,7 @@ export default function GameStats() {
   const isGameOver = useGameStore((state)=> state.isGameOver)
   return (
     <>
-      <div className="hidden md:block flex-col gap-4 text-center">
+      <div data-testid="gamestats" className="hidden md:block flex-col gap-4 text-center">
       {!isGameOver && (
         <>
         <Score />

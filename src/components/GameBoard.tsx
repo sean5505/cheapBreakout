@@ -15,7 +15,6 @@ import GamePausedContent from "./ModalContent/GamePausedContent";
 import FeedbackForm from "./ModalContent/FeedbackForm";
 
 export default function GameBoard() {
-  // moved all the shared variables to store to prevent extensive prop drilling
   //const blockRef: RefObject<HTMLDivElement> = useRef(null);
   const userRef: RefObject<HTMLDivElement> = useRef(null);
   const ballRef: RefObject<HTMLDivElement> = useRef(null);
@@ -49,20 +48,16 @@ export default function GameBoard() {
   }));
 
   useEffect(() => {
-    console.log(`isLaserDisabled: ${isLaserDisabled}, showLaser: ${showLaser}`);
-  }, [ballMovement]);
-
-  useEffect(() => {
     const gameSFX = gameAudio.gameMusic;
-
     gameSFX.play();
-
     return () => {
       gameSFX.pause();
     };
   }, []);
+
   return (
     <div
+      data-testid="game-board"
       ref={boardRef}
       className="h-550 w-560 border-black border-4 border-dotted relative"
       onClick={isGameOver ? openModal : undefined}
@@ -77,17 +72,24 @@ export default function GameBoard() {
         <LevelOneBlocks />
         {isLevelOneCleared && <LevelTwoBlocks />}
         {isLevelTwoCleared && isLevelOneCleared && <LevelThreeBlocks />}
+
         {isGameOver || isLevelThreeCleared ? (
           <Modal>
             {" "}
             <GameOverContent />
           </Modal>
         ) : null}
-        {isGamePaused && (
-          <Modal>
-            <GamePausedContent />
-          </Modal>
-        )}
+        {isGamePaused &&
+          (isLevelThreeCleared ? ( // utilizing so if the spacebar is pressed when level three is cleared the gameOverContent mdoal will appear instead o f the gamepaused modal but is there a better way?
+            <Modal>
+              {" "}
+              <GameOverContent />
+            </Modal>
+          ) : (
+            <Modal>
+              <GamePausedContent />
+            </Modal>
+          ))}
         {showFeedbackForm && (
           <Modal>
             <FeedbackForm />

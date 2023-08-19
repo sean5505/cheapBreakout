@@ -1,17 +1,26 @@
-
 import { useGameStore } from "../../stateManagement/Store";
 import Button from "../../lib/Button";
 
 export default function StartButton() {
-  const { ballMovement, isGameOver, startGame } = useGameStore((state) => ({
+  const {
+    ballMovement,
+    startGame,
+    pauseGame,
+  } = useGameStore((state) => ({
     ballMovement: state.ballMovement,
-    isGameOver: state.isGameOver,
     startGame: state.startGame,
+    pauseGame: state.pauseGame,
   }));
   return (
     <>
-      {!isGameOver && (
-        <Button onClick={startGame}>{ballMovement ? "Pause" : "Start" }</Button>
+      {!ballMovement ? (
+        <div data-testid="startButton">
+          <Button onClick={startGame}> Start </Button>
+        </div>
+      ) : (
+        <div data-testid="pauseButton">
+          <Button onClick={pauseGame}> Pause</Button>
+        </div>
       )}
     </>
   );

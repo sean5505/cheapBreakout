@@ -2,24 +2,40 @@ import { useEffect } from "react";
 import { useGameAudio, useGameStore } from "../stateManagement/Store";
 
 export default function KeyboardEvents() {
-  const { isGameOver, startGame, restartGame, isModalOpen, isLaserDisabled, showFeedbackForm,gameAudio} = useGameStore(
-    (state) => ({
-      isGameOver: state.isGameOver,
-      startGame: state.startGame,
-      restartGame: state.restartGame,
-      isModalOpen: state.isModalOpen,
-      isLaserDisabled: state.isLaserDisabled,
-      showFeedbackForm: state.showFeedbackForm,
-      gameAudio: state.gameAudio,
-    })
-  );
-  const toggleSFX = useGameAudio((state) => state.toggleSFX)
+  const {
+    isGameOver,
+    ballMovement,
+    startGame,
+    pauseGame,
+    restartGame,
+    isModalOpen,
+    isLaserDisabled,
+    showFeedbackForm,
+    gameAudio,
+    isLevelThreeCleared,
+  } = useGameStore((state) => ({
+    isGameOver: state.isGameOver,
+    ballMovement: state.ballMovement,
+    startGame: state.startGame,
+    pauseGame: state.pauseGame,
+    restartGame: state.restartGame,
+    isModalOpen: state.isModalOpen,
+    isLaserDisabled: state.isLaserDisabled,
+    showFeedbackForm: state.showFeedbackForm,
+    gameAudio: state.gameAudio,
+    isLevelThreeCleared: state.isLevelThreeCleared,
+  }));
+  const toggleSFX = useGameAudio((state) => state.toggleSFX);
   const handleKeypress = (e: KeyboardEvent) => {
     e.preventDefault();
 
     if (e.key === " " && !isGameOver) {
-      startGame();
-      gameAudio.gameMusic.play()
+      if (!ballMovement) {
+        startGame();
+        gameAudio.gameMusic.play();
+      } else {
+        pauseGame();
+      }
     } else if (e.key == "r") {
       restartGame();
     } else if (e.key === "p" && !isModalOpen) {
@@ -31,13 +47,13 @@ export default function KeyboardEvents() {
           : useGameStore.setState({ isLaserDisabled: false });
       }
     } else if (e.key === "m") {
-      toggleSFX()
+      toggleSFX();
     }
   };
 
   useEffect(() => {
-    if(!showFeedbackForm)
-    document.addEventListener("keypress", handleKeypress);
+    if (!showFeedbackForm)
+      document.addEventListener("keypress", handleKeypress);
 
     return () => {
       document.removeEventListener("keypress", handleKeypress);

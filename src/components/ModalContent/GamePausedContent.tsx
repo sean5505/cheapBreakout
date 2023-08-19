@@ -9,7 +9,7 @@ import Score from "../GameStats/Score";
 export default function GamePausedContent() {
   return (
     <>
-    <div className="flex gap-2 ">
+    <div className="flex flex-col gap-2  ">
       <CurrentLevel />
       <Score/>
       </div>

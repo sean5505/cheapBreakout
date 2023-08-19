@@ -19,7 +19,7 @@ export default function Controls() {
   return (
     <>
       {!isGameOver && (
-        <div className="hidden lg:block">
+        <div data-testid = "Controls" className="hidden lg:block">
           <ul className="border-black border-2 text-center ">
             <span className="text-2xl underline">Key Controls</span>
             {controls.map((control, index) => (
