@@ -19,7 +19,7 @@ export default function LevelTwoBlocks() {
         }
       }
       for (let x = 205; x <= 295; x += blockWidth) {
-        for (let y = 380; y <= 500; y += blockHeight) { //y<= 500
+        for (let y = 500; y <= 500; y += blockHeight) { 
           LevelTwoBlocks.push([x, y]);
         }
       }

@@ -69,7 +69,8 @@ Although the project was a rebuild of a previous project, it required many diffe
 
 ---
 ## Future Plans
-- **Testing** 
+- Testing 
 - Code Cleanup/ Organizational Improvements
 - Conditional Powerups
 - Mobile Design?
+- **Performance** - there is a bug in which, on render of components such as levelTwo or levelThree blocks, the functionality of the game slows down.. perhaps to overuse/improper use of useEffect?

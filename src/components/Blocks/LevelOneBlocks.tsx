@@ -21,7 +21,7 @@ export default function LevelOneBlocks() {
       }
 
       for (let x = 115; x <= 385; x += blockWidth) {
-        for (let y = 380; y <= 440; y += blockHeight) {
+        for (let y = 380; y <= 440; y += blockHeight) { 
           LevelOneBlocks.push([x, y]);
         }
       }

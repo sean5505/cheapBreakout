@@ -1,18 +1,16 @@
-import { useRef, RefObject, useEffect } from "react";
+import { useRef, RefObject, useEffect, useState } from "react";
 import Ball from "./Ball";
 import LevelOneBlocks from "./Blocks/LevelOneBlocks";
 import LevelTwoBlocks from "./Blocks/LevelTwoBlocks";
 import LevelThreeBlocks from "./Blocks/LevelThreeBlocks";
-
 import User from "./User";
 import Laser from "./Laser";
 import { useGameStore } from "../stateManagement/Store";
 import Modal from "./ModalContent/Modal";
-
 import GameOverContent from "./ModalContent/GameOverContent";
-
 import GamePausedContent from "./ModalContent/GamePausedContent";
 import FeedbackForm from "./ModalContent/FeedbackForm";
+import { FaHeart } from "react-icons/fa6";
 
 export default function GameBoard() {
   //const blockRef: RefObject<HTMLDivElement> = useRef(null);
@@ -32,8 +30,9 @@ export default function GameBoard() {
     isLevelThreeCleared,
     isLaserDisabled,
     showFeedbackForm,
-    gameAudio,
+    lives,
   } = useGameStore((state) => ({
+    lives: state.lives,
     showLaser: state.showLaser,
     ballMovement: state.ballMovement,
     isGameOver: state.isGameOver,
@@ -44,22 +43,38 @@ export default function GameBoard() {
     isLevelThreeCleared: state.isLevelThreeCleared,
     isLaserDisabled: state.isLaserDisabled,
     showFeedbackForm: state.showFeedbackForm,
-    gameAudio: state.gameAudio,
   }));
 
+  const [showLevelTwoBlocks, setShowLevelTwoBlocks] = useState(false);
+  const [showLevelThreeBlocks, setShowLevelThreeBlocks] = useState(false);
+
+
+  const livesDisplay = Array.from({length: lives}, (_, index) => (
+    <FaHeart className='text-red-600' key={index} />
+  ));
   useEffect(() => {
-    const gameSFX = gameAudio.gameMusic;
-    gameSFX.play();
-    return () => {
-      gameSFX.pause();
-    };
-  }, []);
+    if (isLevelOneCleared) {
+      setTimeout(() => {
+        setShowLevelTwoBlocks(true);
+        useGameStore.setState({ level: 2 });
+      }, 3000);
+    }
+  }, [isLevelOneCleared]);
+
+  useEffect(() => {
+    if (isLevelTwoCleared) {
+      setTimeout(() => {
+        setShowLevelThreeBlocks(true);
+        useGameStore.setState({ level: 3 });
+      }, 3000);
+    }
+  }, [isLevelTwoCleared]);
 
   return (
     <div
       data-testid="game-board"
       ref={boardRef}
-      className="h-550 w-560 border-black border-4 border-dotted relative"
+      className="h-550 w-560 border-black border-4 border-dotted relative "
       onClick={isGameOver ? openModal : undefined}
     >
       <>
@@ -70,8 +85,14 @@ export default function GameBoard() {
 
         <User boardRef={boardRef} userRef={userRef} ballRef={ballRef} />
         <LevelOneBlocks />
-        {isLevelOneCleared && <LevelTwoBlocks />}
-        {isLevelTwoCleared && isLevelOneCleared && <LevelThreeBlocks />}
+        {isLevelOneCleared && !showLevelTwoBlocks && (
+          <p className=" text-3xl text-center">Level One Cleared </p>
+        )}
+        {showLevelTwoBlocks && <LevelTwoBlocks />}
+        {isLevelTwoCleared && !showLevelThreeBlocks && (
+          <p className=" text-3xl text-center">Level Two Cleared</p>
+        )}
+        {showLevelThreeBlocks && <LevelThreeBlocks />}
 
         {isGameOver || isLevelThreeCleared ? (
           <Modal>
@@ -95,6 +116,10 @@ export default function GameBoard() {
             <FeedbackForm />
           </Modal>
         )}
+
+        <div className="absolute text-2xl right-0 -top-10 flex ">
+          {livesDisplay}
+        </div>
       </>
     </div>
   );

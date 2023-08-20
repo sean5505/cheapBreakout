@@ -17,6 +17,7 @@ export default function User(props: Props) {
     boardWidth,
     attachBall,
     userCurrentPosition,
+    lives
     
   } = useGameStore((state) => ({
     isGameOver: state.isGameOver,
@@ -26,6 +27,7 @@ export default function User(props: Props) {
     attachBall: state.attachBall,
     userCurrentPosition: state.userCurrentPosition,
     ballCurrentPosition: state.ballCurrentPosition,
+    lives: state.lives,
   }));
 
   const [position, setPosition] = useState<number[]>(userCurrentPosition);
@@ -71,6 +73,10 @@ export default function User(props: Props) {
     drawUser();
     attachBall();
   }, [position]);
+
+  useEffect(() => {
+    setPosition(userCurrentPosition)
+  }, [lives]) // whenever the player loses a life , alter the stateful components 'position' value
 
   return (
     <>

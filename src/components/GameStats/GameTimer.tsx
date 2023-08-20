@@ -38,7 +38,6 @@ export default function GameTimer() {
       <GameStatsHighlight label="Time:">
         {formatTime(seconds)}
       </GameStatsHighlight>
-      ;
     </>
   );
 }

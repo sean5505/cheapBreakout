@@ -1,11 +1,3 @@
-export type AudioData = {
-  blockHit: HTMLAudioElement;
-  gameOver: HTMLAudioElement;
-  userHit: HTMLAudioElement;
-  wallHit: HTMLAudioElement;
-  gameMusic: HTMLAudioElement;
-  shoot: HTMLAudioElement;
-};
 
 export type Block = {
   id: number;
