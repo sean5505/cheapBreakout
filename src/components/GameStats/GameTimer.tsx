@@ -3,7 +3,7 @@ import { useGameStore } from "../../stateManagement/Store";
 import GameStatsHighlight from "../../lib/GameStatsHighlight";
 
 export default function GameTimer() {
-  const [timer, setTimer] = useState(0);
+  const [timer, setTimer] = useState<NodeJS.Timer | number>(0);
   const ballMovement = useGameStore((state) => state.ballMovement);
   const { seconds, updateSeconds } = useGameStore((state) => ({
     seconds: state.seconds,
@@ -12,8 +12,7 @@ export default function GameTimer() {
 
   useEffect(() => {
     if (ballMovement) {
-      
-      setTimer(
+      setTimer( 
         setInterval(() => {
           updateSeconds();
         }, 1000)
@@ -33,5 +32,13 @@ export default function GameTimer() {
       .padStart(2, "0")}`;
   };
 
-  return <GameStatsHighlight label="Time:">{formatTime(seconds)}</GameStatsHighlight>;
+  return (
+    <>
+      
+      <GameStatsHighlight label="Time:">
+        {formatTime(seconds)}
+      </GameStatsHighlight>
+      ;
+    </>
+  );
 }
