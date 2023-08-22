@@ -5,7 +5,7 @@ import AppendBlockProperties from "./BlockProperties";
 
 export default function LevelTwoBlocks() {
   const [blocks, setBlocks] = useState<number[][]>([]);
-  const {  blockWidth, blockHeight } = useGameStore((state) => ({
+  const { blockWidth, blockHeight } = useGameStore((state) => ({
     blockWidth: state.blockWidth,
     blockHeight: state.blockHeight,
   }));
@@ -19,11 +19,11 @@ export default function LevelTwoBlocks() {
         }
       }
       for (let x = 205; x <= 295; x += blockWidth) {
-        for (let y = 500; y <= 500; y += blockHeight) { 
+        for (let y = 380; y <= 500; y += blockHeight) {
           LevelTwoBlocks.push([x, y]);
         }
       }
-     for (let x = 420; x <= 520; x += blockWidth) {
+      for (let x = 420; x <= 520; x += blockWidth) {
         for (let y = 380; y <= 500; y += blockHeight) {
           LevelTwoBlocks.push([x, y]);
         }
@@ -34,10 +34,9 @@ export default function LevelTwoBlocks() {
     populateBlocksArray();
   }, []);
 
-
   return (
     <>
-         <AppendBlockProperties blocks = {blocks}/>
+      <AppendBlockProperties blocks={blocks} />
     </>
   );
 }

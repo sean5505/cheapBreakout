@@ -17,8 +17,7 @@ export default function User(props: Props) {
     boardWidth,
     attachBall,
     userCurrentPosition,
-    lives
-    
+    playerLives,
   } = useGameStore((state) => ({
     isGameOver: state.isGameOver,
     isGamePaused: state.isGamePaused,
@@ -27,7 +26,7 @@ export default function User(props: Props) {
     attachBall: state.attachBall,
     userCurrentPosition: state.userCurrentPosition,
     ballCurrentPosition: state.ballCurrentPosition,
-    lives: state.lives,
+    playerLives: state.playerLives,
   }));
 
   const [position, setPosition] = useState<number[]>(userCurrentPosition);
@@ -58,7 +57,7 @@ export default function User(props: Props) {
   };
 
   useEffect(() => {
-    if (isGameOver || isGamePaused ) {
+    if (isGameOver || isGamePaused) {
       return;
     } else {
       document.addEventListener("keydown", moveUser);
@@ -75,8 +74,8 @@ export default function User(props: Props) {
   }, [position]);
 
   useEffect(() => {
-    setPosition(userCurrentPosition)
-  }, [lives]) // whenever the player loses a life , alter the stateful components 'position' value
+    setPosition(userCurrentPosition);
+  }, [playerLives]); // whenever the player loses/gains a life , alter the stateful components 'position' value
 
   return (
     <>

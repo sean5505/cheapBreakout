@@ -13,7 +13,7 @@ interface GeneralData {
   openModal: () => void;
   closeModal: () => void;
   showFeedbackForm: boolean;
-  lives: number;
+  playerLives: number;
   level: number;
   gameBlocks: Block[];
   blockWidth: number;
@@ -66,6 +66,7 @@ interface gameAudio {
   shoot: HTMLAudioElement;
   gameComplete: HTMLAudioElement;
   levelComplete: HTMLAudioElement;
+  liveLost: HTMLAudioElement;
   toggleSFX: () => void;
 }
 
@@ -83,6 +84,7 @@ export const useGameAudio = create<gameAudio>(() => ({
   shoot: new Audio("audio/pew.wav"),
   levelComplete: new Audio("audio/levelComplete.wav"), // https://freesound.org/people/jivatma07/sounds/122255/
   gameComplete: new Audio("audio/win.wav"), //https://freesound.org/people/mehraniiii/sounds/588234/
+  liveLost: new Audio("audio/liveLost.mp3"), //https://freesound.org/people/Simon_Lacelle/sounds/45654/
   toggleSFX: () => {
     const gameMusic = useGameAudio.getState().gameMusic;
     if (gameMusic.volume > 0) {
@@ -103,7 +105,7 @@ export const useGameStore = create<GeneralData>((set, get) => ({
   closeModal: () => set({ isModalOpen: false, showFeedbackForm: false }),
   showFeedbackForm: false,
   level: 1,
-  lives: 1,
+  playerLives: 1,
   gameBlocks: [],
   blockWidth: 30,
   blockHeight: 12,
@@ -202,7 +204,7 @@ export const useGameStore = create<GeneralData>((set, get) => ({
       checkBlocksArray,
       blocksCleared,
       gameAudio,
-      lives,
+      playerLives,
       reset,
     } = useGameStore.getState();
     // wall collisions
@@ -248,8 +250,11 @@ export const useGameStore = create<GeneralData>((set, get) => ({
       // game over
       if (ballCurrentPosition[1] <= 0) {
         clearInterval(ballMovement as number);
-        set({ ballMovement: null, lives: lives - 1 });
-        if (lives == 0) {
+        set({ ballMovement: null, playerLives: playerLives - 1 });
+        if (playerLives != 0) {
+          gameAudio.liveLost.play();
+        }
+        if (playerLives == 0) {
           gameAudio.gameMusic.pause();
           setTimeout(() => {
             set({ isGameOver: true });
@@ -318,18 +323,18 @@ export const useGameStore = create<GeneralData>((set, get) => ({
       gameAudio,
       level,
       reset,
-      lives,
+      playerLives,
     } = useGameStore.getState();
 
     if (gameBlocks.length === 0) {
       if (!isLevelOneCleared && level == 1) {
         gameAudio.levelComplete.play();
         reset();
-        set({ isLevelOneCleared: true, lives: lives + 1 });
+        set({ isLevelOneCleared: true, playerLives: playerLives + 1 });
       } else if (isLevelOneCleared && !isLevelTwoCleared && level == 2) {
         gameAudio.levelComplete.play();
         reset();
-        set({ isLevelTwoCleared: true, lives: lives + 1 });
+        set({ isLevelTwoCleared: true, playerLives: playerLives + 1 });
       } else if (
         gameBlocks.length === 0 &&
         isLevelOneCleared &&
@@ -370,16 +375,17 @@ export const useGameStore = create<GeneralData>((set, get) => ({
   isPowerUpActive: false,
   reset: () => {
     const { ballMovement, attachBall } = useGameStore.getState();
-
     clearInterval(ballMovement as number);
-    set({
-      ballCurrentPosition: [userStart[0] + 17, userStart[1] + 10],
-      ballStartID: true,
-      ballMovement: null,
-      userCurrentPosition: userStart,
-      xDirection: -2,
-      yDirection: 2,
-    });
+    setTimeout(() => {
+      set({
+        ballCurrentPosition: [userStart[0] + 17, userStart[1] + 10],
+        ballStartID: true,
+        ballMovement: null,
+        userCurrentPosition: userStart,
+        xDirection: -2,
+        yDirection: 2,
+      });
+    }, 500);
     attachBall();
   },
 }));

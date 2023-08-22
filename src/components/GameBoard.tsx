@@ -1,4 +1,4 @@
-import { useRef, RefObject, useEffect, useState } from "react";
+import React, { useRef, RefObject, useEffect, useState } from "react";
 import Ball from "./Ball";
 import LevelOneBlocks from "./Blocks/LevelOneBlocks";
 import LevelTwoBlocks from "./Blocks/LevelTwoBlocks";
@@ -10,7 +10,7 @@ import Modal from "./ModalContent/Modal";
 import GameOverContent from "./ModalContent/GameOverContent";
 import GamePausedContent from "./ModalContent/GamePausedContent";
 import FeedbackForm from "./ModalContent/FeedbackForm";
-import { FaHeart } from "react-icons/fa6";
+import PlayerLives from "./PlayerLives";
 
 export default function GameBoard() {
   //const blockRef: RefObject<HTMLDivElement> = useRef(null);
@@ -30,9 +30,8 @@ export default function GameBoard() {
     isLevelThreeCleared,
     isLaserDisabled,
     showFeedbackForm,
-    lives,
   } = useGameStore((state) => ({
-    lives: state.lives,
+    playerLives: state.playerLives,
     showLaser: state.showLaser,
     ballMovement: state.ballMovement,
     isGameOver: state.isGameOver,
@@ -48,27 +47,22 @@ export default function GameBoard() {
   const [showLevelTwoBlocks, setShowLevelTwoBlocks] = useState(false);
   const [showLevelThreeBlocks, setShowLevelThreeBlocks] = useState(false);
 
-
-  const livesDisplay = Array.from({length: lives}, (_, index) => (
-    <FaHeart className='text-red-600' key={index} />
-  ));
   useEffect(() => {
-    if (isLevelOneCleared) {
+    const setNextLevel = (
+      nextLevel: number,
+      setShowBlocks: React.Dispatch<React.SetStateAction<boolean>>
+    ) => {
       setTimeout(() => {
-        setShowLevelTwoBlocks(true);
-        useGameStore.setState({ level: 2 });
-      }, 3000);
+        setShowBlocks(true);
+        useGameStore.setState({ level: nextLevel });
+      }, 2000);
+    };
+    if (isLevelOneCleared && !isLevelTwoCleared) {
+      setNextLevel(2, setShowLevelTwoBlocks);
+    } else if (isLevelTwoCleared) {
+      setNextLevel(3, setShowLevelThreeBlocks);
     }
-  }, [isLevelOneCleared]);
-
-  useEffect(() => {
-    if (isLevelTwoCleared) {
-      setTimeout(() => {
-        setShowLevelThreeBlocks(true);
-        useGameStore.setState({ level: 3 });
-      }, 3000);
-    }
-  }, [isLevelTwoCleared]);
+  }, [isLevelOneCleared, isLevelTwoCleared]);
 
   return (
     <div
@@ -78,6 +72,7 @@ export default function GameBoard() {
       onClick={isGameOver ? openModal : undefined}
     >
       <>
+        <PlayerLives />
         <Ball ballRef={ballRef} />
         {showLaser && ballMovement && !isLaserDisabled && (
           <Laser laserRef={laserRef} />
@@ -116,10 +111,6 @@ export default function GameBoard() {
             <FeedbackForm />
           </Modal>
         )}
-
-        <div className="absolute text-2xl right-0 -top-10 flex ">
-          {livesDisplay}
-        </div>
       </>
     </div>
   );

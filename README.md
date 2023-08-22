@@ -61,7 +61,7 @@ React is well known for having a one-way data flow paradigm, which allows the us
 
 #### **Debugging**
 
-This project was primarily built with Typescript, which assisted with catching errors with execution, but not implementation. To "counter" this, I made heavy use of console.log which not only benefitted me with debugging, but allowed me to trace the flow of execution throughout the application. One of the problems I had faced during the developmental process was managing the gameBlocks array as it was rendered twice upon mount of the application. Taking advantage of console.log allowed me to catch and implement approriate countermeasures to address this issue.
+This project was primarily built with Typescript, which assisted with catching errors with execution, but not implementation. To "counter" this, I made heavy use of console.log which not only benefitted me with debugging, but allowed me to trace the flow of execution throughout the application. One of the problems I had faced during the developmental process was managing the gameBlocks array as it was rendered twice upon mount of the application. Taking advantage of console.log allowed me to catch and implement approriate countermeasures to address these issue.
 
 ## Conclusion
 
@@ -69,8 +69,9 @@ Although the project was a rebuild of a previous project, it required many diffe
 
 ---
 ## Future Plans
-- Testing 
 - Code Cleanup/ Organizational Improvements
+- Testing 
 - Conditional Powerups
 - Mobile Design?
+- Animations
 - **Performance** - there is a bug in which, on render of components such as levelTwo or levelThree blocks, the functionality of the game slows down.. perhaps to overuse/improper use of useEffect?
