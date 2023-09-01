@@ -1,16 +1,13 @@
-import { describe, expect, beforeEach, vi, it, assert } from "vitest";
-import { render, RenderResult, fireEvent} from "@testing-library/react";
+import { describe, expect, beforeEach, it } from "vitest";
+import { render, RenderResult } from "@testing-library/react";
 
 import App from "./App";
 
-
-
-
 describe("User Interface", () => {
-  let renderedApp: RenderResult
-  beforeEach(() => { 
-   renderedApp = render(<App />)
-})
+  let renderedApp: RenderResult;
+  beforeEach(() => {
+    renderedApp = render(<App />);
+  });
   it("Game Board Mounts", () => {
     const gameBoard = renderedApp.getByTestId("game-board");
     expect(gameBoard).toBeTruthy();
@@ -38,20 +35,15 @@ describe("User Interface", () => {
 
   it("Game Buttons Mounts", () => {
     const toggleGame = renderedApp.getByTestId("toggleGame");
-    expect(toggleGame).toBeTruthy()
+    expect(toggleGame).toBeTruthy();
   });
 
   it("start button exists", () => {
-    const startButton =  renderedApp.getByTestId("startButton")
-    expect(startButton).toBeTruthy()
-  })
-  
-})
+    const startButton = renderedApp.getByTestId("startButton");
+    expect(startButton).toBeTruthy();
+  });
+});
 
-describe('StartGame', () => {
-
-  it("Starts The Game", () => {
-    
-  })
-})
-
+describe("StartGame", () => {
+  it("Starts The Game", () => {});
+});
