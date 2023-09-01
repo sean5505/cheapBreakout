@@ -52,9 +52,10 @@ export default function GameBoard() {
       nextLevel: number,
       setShowBlocks: React.Dispatch<React.SetStateAction<boolean>>
     ) => {
+      useGameStore.setState({ isLoading: true });
       setTimeout(() => {
         setShowBlocks(true);
-        useGameStore.setState({ level: nextLevel });
+        useGameStore.setState({ level: nextLevel, isLoading: false });
       }, 2000);
     };
     if (isLevelOneCleared && !isLevelTwoCleared) {
@@ -79,15 +80,15 @@ export default function GameBoard() {
         )}
 
         <User boardRef={boardRef} userRef={userRef} ballRef={ballRef} />
-        <LevelOneBlocks />
+        {!isLevelOneCleared? <LevelOneBlocks /> : null} 
         {isLevelOneCleared && !showLevelTwoBlocks && (
           <p className=" text-3xl text-center">Level One Cleared </p>
         )}
-        {showLevelTwoBlocks && <LevelTwoBlocks />}
+        {showLevelTwoBlocks && !isLevelTwoCleared ? <LevelTwoBlocks /> : null}
         {isLevelTwoCleared && !showLevelThreeBlocks && (
           <p className=" text-3xl text-center">Level Two Cleared</p>
         )}
-        {showLevelThreeBlocks && <LevelThreeBlocks />}
+        {showLevelThreeBlocks && !isLevelThreeCleared?  <LevelThreeBlocks /> : null}
 
         {isGameOver || isLevelThreeCleared ? (
           <Modal>
@@ -96,7 +97,7 @@ export default function GameBoard() {
           </Modal>
         ) : null}
         {isGamePaused &&
-          (isLevelThreeCleared ? ( // utilizing so if the spacebar is pressed when level three is cleared the gameOverContent mdoal will appear instead o f the gamepaused modal but is there a better way?
+          (isLevelThreeCleared ? ( // utilizing so if the spacebar is pressed when level three is cleared the gameOverContent mdoal will appear instead of the gamepaused modal but is there a better way?
             <Modal>
               {" "}
               <GameOverContent />
