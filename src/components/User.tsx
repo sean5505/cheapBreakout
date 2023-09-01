@@ -9,7 +9,6 @@ type Props = {
 };
 
 export default function User(props: Props) {
-  //zustand store variable
   const {
     isGameOver,
     isGamePaused,

@@ -42,14 +42,12 @@ export default function Laser(props: Props) {
 
   useEffect(() => {
     const intervalId = setInterval(moveLaser, 1);
+    drawLaser();
     return () => {
       clearInterval(intervalId);
     };
   }, [laserPosition]);
 
-  useEffect(() => {
-    drawLaser();
-  }, [laserPosition]);
 
   useEffect(() => {
     gameAudio.shoot.play()

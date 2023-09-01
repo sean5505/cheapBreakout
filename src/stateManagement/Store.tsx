@@ -10,6 +10,7 @@ interface GeneralData {
   isLevelTwoCleared: boolean;
   isLevelThreeCleared: boolean;
   isModalOpen: boolean;
+  isLoading: boolean; // utilizing to remove event listeners when a setTimeout like reset() is being performed
   openModal: () => void;
   closeModal: () => void;
   showFeedbackForm: boolean;
@@ -101,6 +102,7 @@ export const useGameStore = create<GeneralData>((set, get) => ({
   isLevelTwoCleared: false,
   isLevelThreeCleared: false,
   isModalOpen: false,
+  isLoading: false,
   openModal: () => set({ isModalOpen: true }),
   closeModal: () => set({ isModalOpen: false, showFeedbackForm: false }),
   showFeedbackForm: false,
@@ -256,8 +258,9 @@ export const useGameStore = create<GeneralData>((set, get) => ({
         }
         if (playerLives == 0) {
           gameAudio.gameMusic.pause();
+          set({isLoading: true})
           setTimeout(() => {
-            set({ isGameOver: true });
+            set({ isGameOver: true, isLoading: false });
             gameAudio.gameOver.play();
           }, 500);
         } else {
@@ -341,10 +344,11 @@ export const useGameStore = create<GeneralData>((set, get) => ({
         isLevelTwoCleared &&
         level == 3
       ) {
+        set({isLoading: true})
         setTimeout(() => {
           gameAudio.gameComplete.play();
           clearInterval(ballMovement as number);
-          set({ isLevelThreeCleared: true, ballMovement: null });
+          set({ isLevelThreeCleared: true, ballMovement: null, isLoading: false });
         }, 700);
       }
     }
@@ -358,7 +362,6 @@ export const useGameStore = create<GeneralData>((set, get) => ({
 
   pauseGame: () => {
     const { ballMovement } = useGameStore.getState();
-    console.log("function called");
     clearInterval(ballMovement as number);
     set({ ballMovement: null, isGamePaused: true });
   },
@@ -376,6 +379,7 @@ export const useGameStore = create<GeneralData>((set, get) => ({
   reset: () => {
     const { ballMovement, attachBall } = useGameStore.getState();
     clearInterval(ballMovement as number);
+    set({isLoading: true})
     setTimeout(() => {
       set({
         ballCurrentPosition: [userStart[0] + 17, userStart[1] + 10],
@@ -384,8 +388,10 @@ export const useGameStore = create<GeneralData>((set, get) => ({
         userCurrentPosition: userStart,
         xDirection: -2,
         yDirection: 2,
+        isLoading: false,
       });
     }, 500);
     attachBall();
   },
+
 }));

@@ -49,7 +49,7 @@ I made the decision to use `TypeScript` over Javascript to stritcly state what v
 
 For styling, I used `TailwindCSS` to take advantage of its utility classes, enabling me to focus moreso on the functionality of the project.
 
-I opted to use `Zustand` as the state managemnet tool primarily because I had no prior experience with the tool and sought to gain hands-on experience. In comparison with Redux, it required minimal boilerplate code and allowed me to facilitate state updates with ease.
+I opted to use `Zustand` as the state managemenet tool primarily because I had no prior experience with the tool and sought to gain hands-on experience. In comparison with Redux, it required minimal boilerplate code and allowed me to facilitate state updates with ease.
 
 Overall, leveraging these different technologies enabled me to create a well-organized application poised for seamless future updates.
 
@@ -74,4 +74,4 @@ Although the project was a rebuild of a previous project, it required many diffe
 - Conditional Powerups
 - Mobile Design?
 - Animations
-- **Performance** - there is a bug in which, on render of components such as levelTwo or levelThree blocks, the functionality of the game slows down.. perhaps to overuse/improper use of useEffect?
+- ~~**Performance** - there is a bug in which, on render of components such as levelTwo or levelThree blocks, the functionality of the game slows down.. perhaps to overuse/improper use of useEffect?~~
