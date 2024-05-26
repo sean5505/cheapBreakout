@@ -7,14 +7,14 @@ type Props = {
     blocks: number[][],
 }
 
-export default function AppendBlockProperties(props : Props) {
+export default function AppendBlockProperties({blocks}: Props) {
     const { gameBlocks, blockWidth, blockHeight } = useGameStore((state) => ({
         gameBlocks: state.gameBlocks,
         blockWidth: state.blockWidth,
         blockHeight: state.blockHeight,
       }));
     
-        const blocksObject = props.blocks.map((block, index) => ({
+        const blocksObject = blocks.map((block, index) => ({
           ...block,
           id: index,
           bottomLeft: [block[0], block[1]],
@@ -27,7 +27,7 @@ export default function AppendBlockProperties(props : Props) {
           gameBlocks: blocksObject,
           totalBlocks: blocksObject.length,
         });
-      }, [props.blocks]);
+      }, [blocks]);
   return (
     <>
     {gameBlocks.map((block) => (

@@ -4,6 +4,9 @@ export default {
   "./src/**/*.{js,ts,jsx,tsx}",],
   theme: {
     extend: {
+      screens: {
+        'ex-sm': '468px',
+      },
       width: {
         '560' : '560px'
       },

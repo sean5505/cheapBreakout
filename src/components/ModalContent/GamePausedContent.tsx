@@ -13,10 +13,12 @@ export default function GamePausedContent() {
       <CurrentLevel />
       <Score/>
       </div>
+      <div className="flex flex-wrap justify-center gap-3">
       <StartButton />
       <RestartButton />
       <ToggleSFX />
       <ToggleLaser />
+      </div>
     </>
   );
 }

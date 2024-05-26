@@ -5,7 +5,7 @@ type Props = {
   laserRef: RefObject<HTMLDivElement>;
 };
 
-export default function Laser(props: Props) {
+export default function Laser({laserRef}: Props) {
   const {
     userCurrentPosition,
     userBlockWidth,
@@ -23,11 +23,11 @@ export default function Laser(props: Props) {
   const [laserPosition, setLaserPosition] = useState(userCurrentPosition);
 
   const drawLaser = () => {
-    if (props.laserRef.current && showLaser) {
-      props.laserRef.current.style.left = `${
+    if (laserRef.current && showLaser) {
+      laserRef.current.style.left = `${
         laserPosition[0] + userBlockWidth / 3
       }px`;
-      props.laserRef.current.style.bottom = `${laserPosition[1]}px`;
+      laserRef.current.style.bottom = `${laserPosition[1]}px`;
     }
   };
 
@@ -57,7 +57,7 @@ export default function Laser(props: Props) {
   return (
     <>
       <div
-        ref={props.laserRef}
+        ref={laserRef}
         className="h-3 w-3 bg-white rounded-md absolute"
       ></div>
     </>

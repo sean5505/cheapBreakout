@@ -5,10 +5,9 @@ import MouseControl from "./MouseControl";
 type Props = {
   boardRef: RefObject<HTMLDivElement>;
   userRef: RefObject<HTMLDivElement>;
-  ballRef: RefObject<HTMLDivElement>;
 };
 
-export default function User(props: Props) {
+export default function User({ boardRef, userRef }: Props) {
   const {
     isGameOver,
     isGamePaused,
@@ -31,9 +30,9 @@ export default function User(props: Props) {
   const [position, setPosition] = useState<number[]>(userCurrentPosition);
 
   const drawUser = () => {
-    if (props.userRef.current) {
-      props.userRef.current.style.left = `${position[0]}px`;
-      props.userRef.current.style.bottom = `${position[1]}px`;
+    if (userRef.current) {
+      userRef.current.style.left = `${position[0]}px`;
+      userRef.current.style.bottom = `${position[1]}px`;
     }
   };
 
@@ -80,10 +79,10 @@ export default function User(props: Props) {
     <>
       <div
         className="absolute w-12 h-2 bg-black cursor-pointer rounded-full"
-        ref={props.userRef}
+        ref={userRef}
       ></div>
       <MouseControl
-        boardRef={props.boardRef}
+        boardRef={boardRef}
         drawUser={drawUser}
         position={position}
         setPosition={setPosition}

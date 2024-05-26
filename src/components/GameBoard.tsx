@@ -79,8 +79,8 @@ export default function GameBoard() {
           <Laser laserRef={laserRef} />
         )}
 
-        <User boardRef={boardRef} userRef={userRef} ballRef={ballRef} />
-        {!isLevelOneCleared? <LevelOneBlocks /> : null} 
+        <User boardRef={boardRef} userRef={userRef} />
+        {!isLevelOneCleared ? <LevelOneBlocks /> : null}
         {isLevelOneCleared && !showLevelTwoBlocks && (
           <p className=" text-3xl text-center">Level One Cleared </p>
         )}
@@ -88,27 +88,27 @@ export default function GameBoard() {
         {isLevelTwoCleared && !showLevelThreeBlocks && (
           <p className=" text-3xl text-center">Level Two Cleared</p>
         )}
-        {showLevelThreeBlocks && !isLevelThreeCleared?  <LevelThreeBlocks /> : null}
+        {showLevelThreeBlocks && !isLevelThreeCleared ? (
+          <LevelThreeBlocks />
+        ) : null}
 
         {isGameOver || isLevelThreeCleared ? (
-          <Modal>
-            {" "}
+          <Modal title="Game Over">
             <GameOverContent />
           </Modal>
         ) : null}
         {isGamePaused &&
           (isLevelThreeCleared ? ( // utilizing so if the spacebar is pressed when level three is cleared the gameOverContent mdoal will appear instead of the gamepaused modal but is there a better way?
-            <Modal>
-              {" "}
+            <Modal title="Game Over">
               <GameOverContent />
             </Modal>
           ) : (
-            <Modal>
+            <Modal title="Game Paused">
               <GamePausedContent />
             </Modal>
           ))}
         {showFeedbackForm && (
-          <Modal>
+          <Modal title="Feedback Form">
             <FeedbackForm />
           </Modal>
         )}

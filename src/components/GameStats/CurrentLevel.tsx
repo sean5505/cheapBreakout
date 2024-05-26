@@ -5,7 +5,7 @@ export default function CurrentLevel() {
   const level = useGameStore((state) => state.level);
   return (
     <>
-      <GameStatsHighlight label="Level:">{level}</GameStatsHighlight>
+      <GameStatsHighlight label="Level:">{level}/3</GameStatsHighlight>
     </>
   );
 }

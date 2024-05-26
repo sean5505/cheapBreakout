@@ -34,11 +34,11 @@ interface GeneralData {
   laserCurrentPosition: number[] | null;
   laserID: null | number;
   isLaserDisabled: boolean;
-  showLaser: boolean;
+  showLaser: boolean; 
   laserDiameter: number;
   xDirection: number;
   yDirection: number;
-  ballMovement: null | number | NodeJS.Timer;
+  ballMovement: null | number | NodeJS.Timer; // also being used as an isGameStarted/ongoing
   drawBall: () => void;
   moveBall: () => void;
   attachBall: () => void;
@@ -54,7 +54,6 @@ interface GeneralData {
   ballSpeed: number;
   seconds: number;
   updateSeconds: () => void;
-  isPowerUpActive: boolean;
   reset: () => void;
 }
 
@@ -189,7 +188,7 @@ export const useGameStore = create<GeneralData>((set, get) => ({
     });
   },
 
-  checkForCollisions: () => {
+  checkForCollisions: () => { //this should be called in a setInterval
     const {
       ballCurrentPosition,
       boardWidth,
@@ -242,14 +241,14 @@ export const useGameStore = create<GeneralData>((set, get) => ({
         changeDirection();
         gameAudio.blockHit.play();
         set({
+          gameBlocks: updatedBlocks,
           totalBlocks: updatedBlocks.length,
           blocksCleared: blocksCleared + 1,
-          gameBlocks: updatedBlocks,
           score: score + 100 * scoreMultiply,
         });
       }
 
-      // game over
+      // game over || floor collision
       if (ballCurrentPosition[1] <= 0) {
         clearInterval(ballMovement as number);
         set({ ballMovement: null, playerLives: playerLives - 1 });
@@ -371,11 +370,11 @@ export const useGameStore = create<GeneralData>((set, get) => ({
   },
 
   score: 0,
-  scoreMultiply: 1,
-  ballSpeed: 10,
+  scoreMultiply: JSON.parse(localStorage.getItem('difficultySettings') || '{}').scoreMultiply,
+  ballSpeed: JSON.parse(localStorage.getItem('difficultySettings') || '{}').selectedDifficulty,
+
   seconds: 0,
   updateSeconds: () => set((state) => ({ seconds: state.seconds + 1 })),
-  isPowerUpActive: false,
   reset: () => {
     const { ballMovement, attachBall } = useGameStore.getState();
     clearInterval(ballMovement as number);

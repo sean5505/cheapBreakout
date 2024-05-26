@@ -69,9 +69,12 @@ Although the project was a rebuild of a previous project, it required many diffe
 
 ---
 ## Future Plans
+- Reduce Usage of useEfect throught application, --> improper usage
 - Code Cleanup/ Organizational Improvements
 - Testing 
 - Conditional Powerups
-- Mobile Design?
+- Start Menu
+- Leaderboard? Implement a database to keep track of users highest scores locally and globally(no one is gonna play the game globally lol)
+- Mobile Design? **(really need to figure this one out)**
 - Animations
 - ~~**Performance** - there is a bug in which, on render of components such as levelTwo or levelThree blocks, the functionality of the game slows down.. perhaps to overuse/improper use of useEffect?~~

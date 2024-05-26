@@ -5,15 +5,15 @@ type Props = {
   ballRef: RefObject<HTMLDivElement>;
 };
 
-export default function Ball(props: Props) {
+export default function Ball({ballRef}: Props) {
   const { ballCurrentPosition } = useGameStore((state) => ({
     ballCurrentPosition: state.ballCurrentPosition,
   }));
 
   const drawBallF = () => {
-    if (props.ballRef.current) {
-      props.ballRef.current.style.left = `${ballCurrentPosition[0]}px`;
-      props.ballRef.current.style.bottom = `${ballCurrentPosition[1]}px`;
+    if (ballRef.current) {
+      ballRef.current.style.left = `${ballCurrentPosition[0]}px`;
+      ballRef.current.style.bottom = `${ballCurrentPosition[1]}px`;
     }
   };
 
@@ -28,7 +28,7 @@ export default function Ball(props: Props) {
   return (
     <>
       <div
-        ref={props.ballRef}
+        ref={ballRef}
         data-testid="ball"
         className="h-4 w-4 bg-red-600 absolute rounded-full"
       ></div>

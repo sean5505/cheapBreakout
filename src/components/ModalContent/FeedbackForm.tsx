@@ -1,30 +1,49 @@
-import React, { useState } from "react";
-import { useGameStore } from "../../stateManagement/Store";
+import { useState } from "react";
+
 import Button from "../../lib/Button";
+import { useForm } from "react-hook-form";
 
 export default function FeedbackForm() {
   const [result, setResult] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const {
+    register,
+    handleSubmit,
+    reset,
+
+    setValue,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      access_key: "5e933c80-887b-4630-be66-817f5b1d647e",
+      subject: "",
+      from_name: "Breakout Feedback",
+      Name: "",
+      Email: "",
+      Comments: "",
+    },
+  });
+
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  console.log(useGameStore.getState().showFeedbackForm);
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const onSubmit = async (data: any) => {
+    if (data.Name) {
+      setValue("subject", `${data.Name} has sent a reply`); //come back and work on this...
+    }
     setResult("Sending....");
-    const formData = new FormData(event.currentTarget);
-
-    formData.append("access_key", "5e933c80-887b-4630-be66-817f5b1d647e");
-
     const res = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
-      body: formData,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(data, null, 2),
     }).then((res) => res.json());
-
+    console.log(res)
     if (res.success) {
       console.log("Success", res);
+
       setResult("Your message has been sent!");
+      console.log("subject is" + data.subject);
     } else {
       console.log("Error", res);
       setResult(res.message);
@@ -37,59 +56,75 @@ export default function FeedbackForm() {
     <>
       {!formSubmitted ? (
         <>
-          <h2 className="text-center text-xl">Any Feedback?</h2>
           <form
-            onSubmit={onSubmit}
+            onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col justify-center items-center gap-2 "
           >
             <input
               type="hidden"
-              name="access_key"
               value="5e933c80-887b-4630-be66-817f5b1d647e"
+              {...register("access_key")}
             />
-            <input type="hidden" name="from_name" value="Breakout Feedback" />
-            <input
-              type="hidden"
-              name="subject"
-              value={`Reply From ${name ? name : `Anon`}`}
-            />
+            <input type="hidden" {...register("from_name")} />
+            <input type="hidden" {...register("subject")} />
 
             <label htmlFor="feed-name">Name</label>
             <input
+              {...register("Name", {
+                required: { value: true, message: "Required" },
+                minLength: {
+                  value: 3,
+                  message: "Please input at least 3 Characters",
+                },
+              })}
               type="text"
               id="feed-name"
-              name="name"
-              placeholder="John Doe"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              name="Name"
+              placeholder="Your Name"
+              className={errors.Name? "border-2 border-red-600" : ''}
             />
+            <p className="text-red-600 text-center">{errors.Name?.message}</p>
 
             <label htmlFor="feed-email">Email</label>
             <input
+              {...register("Email", {
+                required: { value: true, message: "Required" },
+                pattern: {
+                  value: /\S+@\S+\.\S+/,
+                  message: "Invalid Email Format",
+                },
+              })}
               type="email"
               id="feed-email"
-              name="email"
-              placeholder="john@doe.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="Email"
+              placeholder="Your Email"
+              className={errors.Email? "border-2 border-red-600" : ''}
             />
+            <p className="text-red-600">{errors.Email?.message}</p>
 
             <label htmlFor="feed-comments">Comments</label>
             <textarea
+              {...register("Comments", {
+                required: { value: true, message: "Required" },
+                minLength: {
+                  value: 5,
+                  message: "Please input at least 5 Characters",
+                },
+              })}
               id="feed-comments"
-              name="message"
+              name="Comments"
               placeholder="e.g bugs, glitches, performance issues?"
-              minLength={5}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              required
+              className={errors.Comments? "border-2 border-red-600" : ''}
             ></textarea>
-
-            <Button type="submit">Submit</Button>
+            <p className="text-red-600">{errors.Comments?.message}</p>
+            <div className="flex gap-5">
+              <Button onClick={() => reset()}>Reset</Button>
+              <Button type="submit">Submit</Button>
+            </div>
           </form>
         </>
       ) : (
-        <div>{result}</div>
+        <div className="mt-4">{result}</div>
       )}
     </>
   );

@@ -13,13 +13,13 @@ export default function GameOverContent() {
       <h2 className="text-center">
         {isLevelThreeCleared ? (
           <>
-            Congratulations!
-            <br />
-            You Win!
+            <p>
+              Congratulations!
+              <br />
+              You Win!
+            </p>
           </>
-        ) : (
-          "You Lose!"
-        )}
+        ) : null}
       </h2>
       <Score />
       <BlocksCleared />

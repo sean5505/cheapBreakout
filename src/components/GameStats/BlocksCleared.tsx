@@ -5,6 +5,6 @@ import { useGameStore } from '../../stateManagement/Store'
 export default function BlocksCleared() {
     const blocksCleared = useGameStore((state) => state.blocksCleared)
   return (
-    <GameStatsHighlight label = "Blocks Cleared"> {blocksCleared}</GameStatsHighlight>
+    <GameStatsHighlight label = "Total Blocks Cleared"> {blocksCleared}</GameStatsHighlight>
   )
 }

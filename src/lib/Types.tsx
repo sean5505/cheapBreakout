@@ -13,7 +13,7 @@ export type DifficultyOptions = {
   scoreMultiply: number;
 };
 
-export type Controls = {
+export type GameControls = {
   key: React.ReactNode;
   action: string;
 };

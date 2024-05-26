@@ -5,7 +5,7 @@ import AppendBlockProperties from "./BlockProperties";
 
 export default function LevelOneBlocks() {
   const [blocks, setBlocks] = useState<number[][]>([]);
-  const {  blockWidth, blockHeight } = useGameStore((state) => ({
+  const { blockWidth, blockHeight } = useGameStore((state) => ({
     blockWidth: state.blockWidth,
     blockHeight: state.blockHeight,
   }));
@@ -21,10 +21,10 @@ export default function LevelOneBlocks() {
       }
 
       for (let x = 115; x <= 385; x += blockWidth) {
-        for (let y = 380; y <= 440; y += blockHeight) { 
+        for (let y = 380; y <= 440; y += blockHeight) {
           LevelOneBlocks.push([x, y]);
         }
-      }
+      } 
 
       setBlocks(LevelOneBlocks);
     };
@@ -32,10 +32,9 @@ export default function LevelOneBlocks() {
     populateBlocksArray();
   }, []);
 
-  
   return (
     <>
-      <AppendBlockProperties blocks = {blocks}/>
+      <AppendBlockProperties blocks={blocks} />
     </>
   );
 }
