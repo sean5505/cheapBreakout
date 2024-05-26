@@ -370,8 +370,8 @@ export const useGameStore = create<GeneralData>((set, get) => ({
   },
 
   score: 0,
-  scoreMultiply: JSON.parse(localStorage.getItem('difficultySettings') || '{}').scoreMultiply,
-  ballSpeed: JSON.parse(localStorage.getItem('difficultySettings') || '{}').selectedDifficulty,
+  scoreMultiply: JSON.parse(localStorage.getItem('difficultySettings') || '{}').scoreMultiply || 1, //ahhhhhhhhh interesting so for the first load a difficulty has to be selected or a default value is needed or else it will not be calculated correctly but afterwards we good
+  ballSpeed: JSON.parse(localStorage.getItem('difficultySettings') || '{}').selectedDifficulty || 10,
 
   seconds: 0,
   updateSeconds: () => set((state) => ({ seconds: state.seconds + 1 })),
