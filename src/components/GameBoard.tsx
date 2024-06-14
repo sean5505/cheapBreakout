@@ -11,6 +11,7 @@ import GameOverContent from "./ModalContent/GameOverContent";
 import GamePausedContent from "./ModalContent/GamePausedContent";
 import FeedbackForm from "./ModalContent/FeedbackForm";
 import PlayerLives from "./PlayerLives";
+import Indicators from "./Indicators";
 
 export default function GameBoard() {
   //const blockRef: RefObject<HTMLDivElement> = useRef(null);
@@ -31,7 +32,6 @@ export default function GameBoard() {
     isLaserDisabled,
     showFeedbackForm,
   } = useGameStore((state) => ({
-    playerLives: state.playerLives,
     showLaser: state.showLaser,
     ballMovement: state.ballMovement,
     isGameOver: state.isGameOver,
@@ -73,6 +73,7 @@ export default function GameBoard() {
       onClick={isGameOver ? openModal : undefined}
     >
       <>
+        <Indicators/>
         <PlayerLives />
         <Ball ballRef={ballRef} />
         {showLaser && ballMovement && !isLaserDisabled && (

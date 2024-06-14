@@ -31,7 +31,7 @@ export default function KeyboardEvents() {
 
     if (!isGameOver && !isLoading) {
       if (e.key === " ") {
-        !ballMovement ? (startGame(), gameAudio.gameMusic.play()) : pauseGame();
+        !ballMovement ? (startGame(), gameAudio.sfx.play(), useGameAudio.setState({isSFXMuted: false})) : pauseGame();
       } else if (e.key == "r") {
         restartGame();
       } else if (e.key === "p" && !isModalOpen) {

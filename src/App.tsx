@@ -8,6 +8,7 @@ import Footer from "./components/Footer";
 import KeyboardEvents from "./components/KeyPressEvents";
 import { useEffect, useState } from "react";
 
+
 export default function App() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
 

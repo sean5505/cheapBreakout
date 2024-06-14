@@ -34,7 +34,7 @@ interface GeneralData {
   laserCurrentPosition: number[] | null;
   laserID: null | number;
   isLaserDisabled: boolean;
-  showLaser: boolean; 
+  showLaser: boolean;
   laserDiameter: number;
   xDirection: number;
   yDirection: number;
@@ -62,21 +62,22 @@ interface gameAudio {
   gameOver: HTMLAudioElement;
   userHit: HTMLAudioElement;
   wallHit: HTMLAudioElement;
-  gameMusic: HTMLAudioElement;
+  sfx: HTMLAudioElement;
   shoot: HTMLAudioElement;
   gameComplete: HTMLAudioElement;
   levelComplete: HTMLAudioElement;
   liveLost: HTMLAudioElement;
+  isSFXMuted: Boolean;
   toggleSFX: () => void;
 }
 
-export const useGameAudio = create<gameAudio>(() => ({
+export const useGameAudio = create<gameAudio>((set) => ({
   blockHit: new Audio("audio/bingbong.mp3"), // youtube
   gameOver: new Audio("audio/GameOver.mp3"), // youtube
   userHit: new Audio("audio/userHit.wav"), // https://freesound.org/people/acollier123/sounds/122670/
   wallHit: new Audio("audio/wHM.wav"), // https://freesound.org/people/cabled_mess/sounds/350865/
-  gameMusic: (() => {
-    const audio = new Audio("audio/GameMusic.wav"); // https://freesound.org/people/djgriffin/sounds/202077/
+  sfx: (() => {
+    const audio = new Audio("audio/backgroundAudio.wav"); // https://freesound.org/people/djgriffin/sounds/202077/
     audio.volume = 0.2;
     audio.loop = true;
     return audio;
@@ -85,14 +86,21 @@ export const useGameAudio = create<gameAudio>(() => ({
   levelComplete: new Audio("audio/levelComplete.wav"), // https://freesound.org/people/jivatma07/sounds/122255/
   gameComplete: new Audio("audio/win.wav"), //https://freesound.org/people/mehraniiii/sounds/588234/
   liveLost: new Audio("audio/liveLost.mp3"), //https://freesound.org/people/Simon_Lacelle/sounds/45654/
+  isSFXMuted: true,
   toggleSFX: () => {
-    const gameMusic = useGameAudio.getState().gameMusic;
-    if (gameMusic.volume > 0) {
-      gameMusic.volume = 0;
-      console.log(gameMusic.volume);
+    set((state) => {
+      const isMuted = !state.isSFXMuted;
+      state.sfx.volume = isMuted ? 0 : 0.2;
+      return { isSFXMuted: isMuted };
+    });
+    /*const sfx = useGameAudio.getState().sfx;
+    if (sfx.volume > 0) {
+      sfx.volume = 0;
+      console.log(sfx.volume);
     } else {
-      gameMusic.volume = 0.2;
-    }
+      sfx.volume = 0.2;
+      
+    }*/
   },
 }));
 export const useGameStore = create<GeneralData>((set, get) => ({
@@ -188,7 +196,8 @@ export const useGameStore = create<GeneralData>((set, get) => ({
     });
   },
 
-  checkForCollisions: () => { //this should be called in a setInterval
+  checkForCollisions: () => {
+    //this should be called in a setInterval
     const {
       ballCurrentPosition,
       boardWidth,
@@ -256,8 +265,8 @@ export const useGameStore = create<GeneralData>((set, get) => ({
           gameAudio.liveLost.play();
         }
         if (playerLives == 0) {
-          gameAudio.gameMusic.pause();
-          set({isLoading: true})
+          gameAudio.sfx.pause();
+          set({ isLoading: true });
           setTimeout(() => {
             set({ isGameOver: true, isLoading: false });
             gameAudio.gameOver.play();
@@ -343,18 +352,25 @@ export const useGameStore = create<GeneralData>((set, get) => ({
         isLevelTwoCleared &&
         level == 3
       ) {
-        set({isLoading: true})
+        set({ isLoading: true });
         setTimeout(() => {
           gameAudio.gameComplete.play();
           clearInterval(ballMovement as number);
-          set({ isLevelThreeCleared: true, ballMovement: null, isLoading: false });
+          set({
+            isLevelThreeCleared: true,
+            ballMovement: null,
+            isLoading: false,
+          });
         }, 700);
       }
     }
   },
   startGame: () => {
-    const { moveBall, ballSpeed, closeModal } = useGameStore.getState();
+    const { moveBall, ballSpeed, closeModal, scoreMultiply } =
+      useGameStore.getState();
     const timerID = setInterval(moveBall, ballSpeed);
+    console.log("ball speed " + ballSpeed);
+    console.log("scoreMultiply " + scoreMultiply);
     closeModal(); // if the game is continued after being paused by click keyPress, set the value of isModalOpen to false for laser functionality to prevail
     set({ ballMovement: timerID, isGamePaused: false, ballStartID: false });
   },
@@ -370,15 +386,17 @@ export const useGameStore = create<GeneralData>((set, get) => ({
   },
 
   score: 0,
-  scoreMultiply: JSON.parse(localStorage.getItem('difficultySettings') || '{}').scoreMultiply || 1, //ahhhhhhhhh interesting so for the first load a difficulty has to be selected or a default value is needed or else it will not be calculated correctly but afterwards we good
-  ballSpeed: JSON.parse(localStorage.getItem('difficultySettings') || '{}').selectedDifficulty || 10,
+  scoreMultiply: JSON.parse(localStorage.getItem("difficultySettings") || "{}")
+    .scoreMultiply, //ahhhhhhhhh interesting so for the first load a difficulty has to be selected or a default value is needed or else it will not be calculated correctly but afterwards we good
+  ballSpeed: JSON.parse(localStorage.getItem("difficultySettings") || "{}")
+    .selectedDifficulty,
 
   seconds: 0,
   updateSeconds: () => set((state) => ({ seconds: state.seconds + 1 })),
   reset: () => {
     const { ballMovement, attachBall } = useGameStore.getState();
     clearInterval(ballMovement as number);
-    set({isLoading: true})
+    set({ isLoading: true });
     setTimeout(() => {
       set({
         ballCurrentPosition: [userStart[0] + 17, userStart[1] + 10],
@@ -392,5 +410,4 @@ export const useGameStore = create<GeneralData>((set, get) => ({
     }, 500);
     attachBall();
   },
-
 }));
