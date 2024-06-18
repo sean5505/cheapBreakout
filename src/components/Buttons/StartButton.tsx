@@ -6,16 +6,18 @@ export default function StartButton() {
     ballMovement,
     startGame,
     pauseGame,
+    isLevelThreeCleared,
   } = useGameStore((state) => ({
     ballMovement: state.ballMovement,
     startGame: state.startGame,
     pauseGame: state.pauseGame,
+    isLevelThreeCleared: state.isLevelThreeCleared,
   }));
   return (
     <>
       {!ballMovement ? (
         <div data-testid="startButton">
-          <Button onClick={startGame}> Start </Button>
+          <Button disabled = {isLevelThreeCleared? true : false}onClick={startGame}> Start </Button>
         </div>
       ) : (
         <div data-testid="pauseButton">

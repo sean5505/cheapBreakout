@@ -1,12 +1,12 @@
-
-import GameStatsHighlight from '../../lib/GameStatsHighlight'
-import { useGameStore } from '../../stateManagement/Store'
+import GameStatsHighlight from "../../lib/GameStatsHighlight";
+import { useGameStore } from "../../stateManagement/Store";
 
 export default function TotalBlocks() {
-  const totalBlocks = useGameStore((state) => state.totalBlocks)
-    
+  const totalBlocks = useGameStore((state) => state.totalBlocks);
+
   return (
-   
-      <GameStatsHighlight label="Remaining Blocks:">{totalBlocks}</GameStatsHighlight> 
-  )
+    <GameStatsHighlight label="Remaining Blocks:">
+      {totalBlocks ? totalBlocks : "..."}
+    </GameStatsHighlight>
+  );
 }

@@ -3,6 +3,7 @@ import { useGameAudio, useGameStore } from "../stateManagement/Store";
 export default function Indicators() {
   const isMuted = useGameAudio((state) => state.isSFXMuted);
   const isLaserDisabled = useGameStore((state) => state.isLaserDisabled)
+  
   return (
     <>
     <div className="absolute left-0 -top-14" >

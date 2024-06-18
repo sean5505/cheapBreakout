@@ -2,6 +2,9 @@ import { useState } from "react";
 
 import Button from "../../lib/Button";
 import { useForm } from "react-hook-form";
+import AppModal from "./AppModal";
+import { RiMessage2Fill } from "react-icons/ri";
+import { useGameStore } from "../../stateManagement/Store";
 
 export default function FeedbackForm() {
   const [result, setResult] = useState("");
@@ -22,8 +25,17 @@ export default function FeedbackForm() {
       Comments: "",
     },
   });
-
+  const pauseGame = useGameStore((state) => state.pauseGame);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const onSubmit = async (data: any) => {
     if (data.Name) {
@@ -38,7 +50,7 @@ export default function FeedbackForm() {
       },
       body: JSON.stringify(data, null, 2),
     }).then((res) => res.json());
-    console.log(res)
+    console.log(res);
     if (res.success) {
       console.log("Success", res);
 
@@ -54,8 +66,22 @@ export default function FeedbackForm() {
 
   return (
     <>
-      {!formSubmitted ? (
-        <>
+      <RiMessage2Fill
+        className=" text-black hover:text-blue-500 "
+        title="Feedback"
+        onClick={() => {
+          pauseGame();
+          openModal();
+          useGameStore.setState({ isFormOpen: true });
+       
+        }}
+      />
+      <AppModal
+        isModalOpen={isModalOpen}
+        closeModal={closeModal}
+        title="Feedback Form"
+      >
+        {!formSubmitted ? (
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col justify-center items-center gap-2 "
@@ -81,7 +107,7 @@ export default function FeedbackForm() {
               id="feed-name"
               name="Name"
               placeholder="Your Name"
-              className={errors.Name? "border-2 border-red-600" : ''}
+              className={errors.Name ? "border-2 border-red-600" : ""}
             />
             <p className="text-red-600 text-center">{errors.Name?.message}</p>
 
@@ -98,7 +124,7 @@ export default function FeedbackForm() {
               id="feed-email"
               name="Email"
               placeholder="Your Email"
-              className={errors.Email? "border-2 border-red-600" : ''}
+              className={errors.Email ? "border-2 border-red-600" : ""}
             />
             <p className="text-red-600">{errors.Email?.message}</p>
 
@@ -114,7 +140,7 @@ export default function FeedbackForm() {
               id="feed-comments"
               name="Comments"
               placeholder="e.g bugs, glitches, performance issues?"
-              className={errors.Comments? "border-2 border-red-600" : ''}
+              className={errors.Comments ? "border-2 border-red-600" : ""}
             ></textarea>
             <p className="text-red-600">{errors.Comments?.message}</p>
             <div className="flex gap-5">
@@ -122,10 +148,10 @@ export default function FeedbackForm() {
               <Button type="submit">Submit</Button>
             </div>
           </form>
-        </>
-      ) : (
-        <div className="mt-4">{result}</div>
-      )}
+        ) : (
+          <div className="mt-4 text-black">{result}</div>
+        )}
+      </AppModal>
     </>
   );
 }

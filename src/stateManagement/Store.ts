@@ -5,15 +5,14 @@ import { Block } from "../lib/Types";
 const userStart = [275, 10];
 
 interface GeneralData {
+  isFormOpen: boolean;
+  isDifficultySelected: boolean;
+  setDifficulty: string;
   gameAudio: any;
   isLevelOneCleared: boolean;
   isLevelTwoCleared: boolean;
   isLevelThreeCleared: boolean;
-  isModalOpen: boolean;
   isLoading: boolean; // utilizing to remove event listeners when a setTimeout like reset() is being performed
-  openModal: () => void;
-  closeModal: () => void;
-  showFeedbackForm: boolean;
   playerLives: number;
   level: number;
   gameBlocks: Block[];
@@ -93,27 +92,18 @@ export const useGameAudio = create<gameAudio>((set) => ({
       state.sfx.volume = isMuted ? 0 : 0.2;
       return { isSFXMuted: isMuted };
     });
-    /*const sfx = useGameAudio.getState().sfx;
-    if (sfx.volume > 0) {
-      sfx.volume = 0;
-      console.log(sfx.volume);
-    } else {
-      sfx.volume = 0.2;
-      
-    }*/
   },
 }));
 export const useGameStore = create<GeneralData>((set, get) => ({
+  isFormOpen: false,
+  isDifficultySelected: false,
+  setDifficulty: "",
   gameAudio: useGameAudio.getState(),
   isLevelOneCleared: false,
   isLevelTwoCleared: false,
   isLevelThreeCleared: false,
-  isModalOpen: false,
   isLoading: false,
-  openModal: () => set({ isModalOpen: true }),
-  closeModal: () => set({ isModalOpen: false, showFeedbackForm: false }),
-  showFeedbackForm: false,
-  level: 1,
+  level: 0,
   playerLives: 1,
   gameBlocks: [],
   blockWidth: 30,
@@ -172,9 +162,9 @@ export const useGameStore = create<GeneralData>((set, get) => ({
     });
     drawBall();
     checkForCollisions();
-
     if (ballCurrentPosition[1] <= 0) {
       clearInterval(ballMovement as number); // hmm
+      set({ ballMovement: null });
     }
   },
   changeDirection: () => {
@@ -366,12 +356,8 @@ export const useGameStore = create<GeneralData>((set, get) => ({
     }
   },
   startGame: () => {
-    const { moveBall, ballSpeed, closeModal, scoreMultiply } =
-      useGameStore.getState();
+    const { moveBall, ballSpeed } = useGameStore.getState();
     const timerID = setInterval(moveBall, ballSpeed);
-    console.log("ball speed " + ballSpeed);
-    console.log("scoreMultiply " + scoreMultiply);
-    closeModal(); // if the game is continued after being paused by click keyPress, set the value of isModalOpen to false for laser functionality to prevail
     set({ ballMovement: timerID, isGamePaused: false, ballStartID: false });
   },
 
@@ -382,18 +368,18 @@ export const useGameStore = create<GeneralData>((set, get) => ({
   },
 
   restartGame: () => {
+    //gonna remove later not the react way
     window.location.reload();
   },
 
   score: 0,
-  scoreMultiply: JSON.parse(localStorage.getItem("difficultySettings") || "{}")
-    .scoreMultiply, //ahhhhhhhhh interesting so for the first load a difficulty has to be selected or a default value is needed or else it will not be calculated correctly but afterwards we good
-  ballSpeed: JSON.parse(localStorage.getItem("difficultySettings") || "{}")
-    .selectedDifficulty,
+  scoreMultiply: 0,
+  ballSpeed: 0,
 
   seconds: 0,
   updateSeconds: () => set((state) => ({ seconds: state.seconds + 1 })),
   reset: () => {
+    //will reset ball functions and user functions
     const { ballMovement, attachBall } = useGameStore.getState();
     clearInterval(ballMovement as number);
     set({ isLoading: true });
@@ -407,7 +393,7 @@ export const useGameStore = create<GeneralData>((set, get) => ({
         yDirection: 2,
         isLoading: false,
       });
-    }, 500);
+    }, 1000);
     attachBall();
   },
 }));

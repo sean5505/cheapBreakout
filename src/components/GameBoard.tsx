@@ -6,12 +6,12 @@ import LevelThreeBlocks from "./Blocks/LevelThreeBlocks";
 import User from "./User";
 import Laser from "./Laser";
 import { useGameStore } from "../stateManagement/Store";
-import Modal from "./ModalContent/Modal";
 import GameOverContent from "./ModalContent/GameOverContent";
 import GamePausedContent from "./ModalContent/GamePausedContent";
-import FeedbackForm from "./ModalContent/FeedbackForm";
 import PlayerLives from "./PlayerLives";
 import Indicators from "./Indicators";
+import GameModal from "./ModalContent/GameModal";
+import SelectDifficulty from "./ModalContent/SelectDifficulty";
 
 export default function GameBoard() {
   //const blockRef: RefObject<HTMLDivElement> = useRef(null);
@@ -19,33 +19,37 @@ export default function GameBoard() {
   const ballRef: RefObject<HTMLDivElement> = useRef(null);
   const boardRef: RefObject<HTMLDivElement> = useRef(null);
   const laserRef: RefObject<HTMLDivElement> = useRef(null);
-
   const {
     showLaser,
     ballMovement,
     isGameOver,
-    openModal,
     isGamePaused,
     isLevelOneCleared,
     isLevelTwoCleared,
     isLevelThreeCleared,
     isLaserDisabled,
-    showFeedbackForm,
+    isDifficultySelected,
   } = useGameStore((state) => ({
     showLaser: state.showLaser,
     ballMovement: state.ballMovement,
     isGameOver: state.isGameOver,
-    openModal: state.openModal,
     isGamePaused: state.isGamePaused,
     isLevelOneCleared: state.isLevelOneCleared,
     isLevelTwoCleared: state.isLevelTwoCleared,
     isLevelThreeCleared: state.isLevelThreeCleared,
     isLaserDisabled: state.isLaserDisabled,
-    showFeedbackForm: state.showFeedbackForm,
+    isDifficultySelected: state.isDifficultySelected,
   }));
 
   const [showLevelTwoBlocks, setShowLevelTwoBlocks] = useState(false);
   const [showLevelThreeBlocks, setShowLevelThreeBlocks] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true);
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     const setNextLevel = (
@@ -65,15 +69,23 @@ export default function GameBoard() {
     }
   }, [isLevelOneCleared, isLevelTwoCleared]);
 
+  const handleClick = () => { //if game is over and the board is clicked when modal is closed
+    openModal();
+    useGameStore.setState({ballMovement: null})
+  };
+
   return (
     <div
       data-testid="game-board"
       ref={boardRef}
       className="h-550 w-560 border-black border-4 border-dotted relative "
-      onClick={isGameOver ? openModal : undefined}
+      onClick={isGameOver || isLevelThreeCleared ? handleClick : undefined}
     >
       <>
-        <Indicators/>
+      {!isDifficultySelected? 
+        <SelectDifficulty/> : (
+      <>
+        <Indicators />
         <PlayerLives />
         <Ball ballRef={ballRef} />
         {showLaser && ballMovement && !isLaserDisabled && (
@@ -93,27 +105,36 @@ export default function GameBoard() {
           <LevelThreeBlocks />
         ) : null}
 
-        {isGameOver || isLevelThreeCleared ? (
-          <Modal title="Game Over">
-            <GameOverContent />
-          </Modal>
-        ) : null}
         {isGamePaused &&
           (isLevelThreeCleared ? ( // utilizing so if the spacebar is pressed when level three is cleared the gameOverContent mdoal will appear instead of the gamepaused modal but is there a better way?
-            <Modal title="Game Over">
-              <GameOverContent />
-            </Modal>
+            <GameModal
+              isModalOpen={isModalOpen}
+              closeModal={closeModal}
+              title="Game Over"
+            >
+              <GameOverContent />{" "}
+            </GameModal>
           ) : (
-            <Modal title="Game Paused">
-              <GamePausedContent />
-            </Modal>
+            <GamePausedContent />
           ))}
-        {showFeedbackForm && (
-          <Modal title="Feedback Form">
-            <FeedbackForm />
-          </Modal>
+        {/*will render the below when the gameboard is clicked after the gameover modal is closed... linked to handleClick func*/}
+        {isGameOver || isLevelThreeCleared ? (
+          <GameModal
+            isModalOpen={isModalOpen}
+            closeModal={closeModal}
+            title="Game Over"
+          >
+            <GameOverContent />
+          </GameModal>
+        ) : null}
+        </>
         )}
+        
       </>
     </div>
   );
 }
+
+{/* with the gameovercontent it would be better to render the modal 
+  in the child component, however, i want to be able to open the modal
+  on click of the game board, aka the parent component */}

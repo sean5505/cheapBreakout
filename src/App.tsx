@@ -1,20 +1,19 @@
 import "./App.css";
 import Controls from "./components/Controls";
-import Difficulty from "./components/Difficulty";
 import GameBoard from "./components/GameBoard";
 import ToggleGame from "./components/Buttons/ToggleGame";
 import GameStats from "./components/GameStats/AllGameStats";
 import Footer from "./components/Footer";
 import KeyboardEvents from "./components/KeyPressEvents";
 import { useEffect, useState } from "react";
-
+import { useGameStore } from "./stateManagement/Store";
 
 export default function App() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
-
   const handleResize = () => {
     setIsMobile(window.innerWidth < 480);
   };
+  const isDifficultySelected = useGameStore((state) => state.isDifficultySelected)
 
   useEffect(() => {
     window.addEventListener("resize", handleResize);
@@ -33,22 +32,23 @@ export default function App() {
           </p>
         ) : (
           <>
-            <div className="flex justify-center items-center mb-8 ">
-              <Difficulty />
-            </div>
-            <div className="flex items-center justify-center gap-10">
-              <GameStats />
+            <header className="text-center mt-4 text-xl ">
+              <h1>Cheap Breakout</h1>
+            </header>
+            <div className="flex items-center justify-center gap-10 mt-14">
+              <GameStats /> 
               <GameBoard />
               <div className="hidden lg:block">
                 <Controls />
               </div>
             </div>
-            <ToggleGame />
+           {isDifficultySelected && <ToggleGame /> }
           </>
         )}
+
         <Footer />
       </div>
-      <KeyboardEvents />
+      {!isMobile && <KeyboardEvents /> } 
     </>
   );
 }

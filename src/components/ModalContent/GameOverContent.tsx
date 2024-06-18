@@ -8,23 +8,26 @@ export default function GameOverContent() {
   const isLevelThreeCleared = useGameStore(
     (state) => state.isLevelThreeCleared
   );
+
   return (
     <>
-      <h2 className="text-center">
-        {isLevelThreeCleared ? (
-          <>
-            <p>
-              Congratulations!
-              <br />
-              You Win!
-            </p>
-          </>
-        ) : null}
-      </h2>
-      <Score />
-      <BlocksCleared />
-      <GameTimer />
-      <RestartButton />
+      <>
+        <h2 className="text-center">
+          {isLevelThreeCleared ? (
+            <>
+              <p>
+                Congratulations!
+                <br />
+                You Win!
+              </p>
+            </>
+          ) : null}
+        </h2>
+        <Score />
+        <BlocksCleared />
+        <GameTimer />
+        <RestartButton />
+      </>
     </>
   );
 }

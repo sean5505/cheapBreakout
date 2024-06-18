@@ -1,17 +1,11 @@
-import { RiMessage2Fill } from "react-icons/ri";
 import { FaGithub, FaUser } from "react-icons/fa6";
 import { useGameStore } from "../stateManagement/Store";
+import FeedbackForm from "./ModalContent/FeedbackForm";
 
 function FooterLinks() {
-  const ballMovement = useGameStore((state) => state.ballMovement);
-  const showFeedbackForm = useGameStore((state) => state.showFeedbackForm);
+
   const pauseGame = useGameStore((state) => state.pauseGame);
-  const openFeedback = () => {
-    useGameStore.setState({ showFeedbackForm: true });
-  };
-  const closeFeedback = () => {
-    useGameStore.setState({ showFeedbackForm: false });
-  };
+  
   return (
     <div className=" flex max-ex-sm:gap-4 gap-10 text-3xl cursor-pointer">
       <a
@@ -34,15 +28,7 @@ function FooterLinks() {
           onClick={pauseGame}
         />
       </a>
-      <RiMessage2Fill
-        className={` text-black hover:text-blue-500 ${
-          showFeedbackForm ? "text-red-600" : null
-        }`}
-        title="Feedback"
-        onClick={
-          !showFeedbackForm && !ballMovement ? openFeedback : closeFeedback
-        }
-      />
+      <FeedbackForm/>
     </div>
   );
 }

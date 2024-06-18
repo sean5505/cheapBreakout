@@ -4,16 +4,19 @@ import GameStatsHighlight from "../../lib/GameStatsHighlight";
 
 export default function GameTimer() {
   const [timer, setTimer] = useState<NodeJS.Timer | number>(0);
-  const ballMovement = useGameStore((state) => state.ballMovement);
-  const { seconds, updateSeconds } = useGameStore((state) => ({
-    seconds: state.seconds,
-    updateSeconds: state.updateSeconds,
-  }));
+  const { ballMovement, seconds, updateSeconds, isLevelThreeCleared } =
+    useGameStore((state) => ({
+      ballMovement: state.ballMovement,
+      seconds: state.seconds,
+      updateSeconds: state.updateSeconds,
+      isLevelThreeCleared: state.isLevelThreeCleared,
+    }));
 
   useEffect(() => {
-    if (ballMovement) {
-      setTimer( 
+    if (ballMovement && !isLevelThreeCleared) {
+      setTimer(
         setInterval(() => {
+          console.log(isLevelThreeCleared);
           updateSeconds();
         }, 1000)
       );
@@ -22,7 +25,7 @@ export default function GameTimer() {
     }
 
     return () => clearInterval(timer);
-  }, [ballMovement]);
+  }, [ballMovement, isLevelThreeCleared]);
 
   const formatTime = (timeInSeconds: number) => {
     const minutes = Math.floor(timeInSeconds / 60);
@@ -34,7 +37,6 @@ export default function GameTimer() {
 
   return (
     <>
-      
       <GameStatsHighlight label="Time:">
         {formatTime(seconds)}
       </GameStatsHighlight>

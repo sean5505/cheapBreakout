@@ -8,33 +8,34 @@ export default function KeyboardEvents() {
     startGame,
     pauseGame,
     restartGame,
-    isModalOpen,
     isLaserDisabled,
-    showFeedbackForm,
-    gameAudio,
     isLoading,
+    isFormOpen,
+    isDifficultySelected,
+    isLevelThreeCleared,
   } = useGameStore((state) => ({
     isGameOver: state.isGameOver,
     ballMovement: state.ballMovement,
     startGame: state.startGame,
     pauseGame: state.pauseGame,
     restartGame: state.restartGame,
-    isModalOpen: state.isModalOpen,
     isLaserDisabled: state.isLaserDisabled,
-    showFeedbackForm: state.showFeedbackForm,
     gameAudio: state.gameAudio,
     isLoading: state.isLoading,
+    isFormOpen: state.isFormOpen,
+    isDifficultySelected: state.isDifficultySelected,
+    isLevelThreeCleared: state.isLevelThreeCleared,
   }));
   const toggleSFX = useGameAudio((state) => state.toggleSFX);
   const handleKeypress = (e: KeyboardEvent) => {
     e.preventDefault();
 
     if (!isGameOver && !isLoading) {
-      if (e.key === " ") {
-        !ballMovement ? (startGame(), gameAudio.sfx.play(), useGameAudio.setState({isSFXMuted: false})) : pauseGame();
+      if (e.key === " " && !isLevelThreeCleared) {
+        !ballMovement ? startGame() : pauseGame();
       } else if (e.key == "r") {
         restartGame();
-      } else if (e.key === "p" && !isModalOpen) {
+      } else if (e.key === "p") {
         useGameStore.setState({ showLaser: true });
       } else if (e.key === "d") {
         {
@@ -49,9 +50,9 @@ export default function KeyboardEvents() {
   };
 
   useEffect(() => {
-    if (!showFeedbackForm)
+    if (!isFormOpen && isDifficultySelected)
+      //for keypress events to be disabled when conditions are met
       document.addEventListener("keypress", handleKeypress);
-
     return () => {
       document.removeEventListener("keypress", handleKeypress);
     };

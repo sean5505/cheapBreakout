@@ -69,11 +69,12 @@ Although the project was a rebuild of a previous project, it required many diffe
 
 ---
 ## Future Plans
-- Reduce Usage of useEfect throught application, --> improper usage
+- UI update
+- **Reduce Usage of useEfect throught application, --> improper usage**
 - Code Cleanup/ Organizational Improvements
-- Testing 
+- **Testing** - important for continous development 
 - Conditional Powerups
-- Start Menu
+- Add some promises (async/await)
 - Leaderboard? Implement a database to keep track of users highest scores locally and globally(no one is gonna play the game globally lol)
 - Mobile Design? **(really need to figure this one out)**
 - Animations
