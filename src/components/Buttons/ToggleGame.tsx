@@ -1,16 +1,20 @@
 import { useGameStore } from "../../stateManagement/Store";
+import PauseButton from "./PauseButton";
 import RestartButton from "./RestartButton";
 import StartButton from "./StartButton";
 import ToggleLaser from "./ToggleLaser";
 
 export default function ToggleGame() {
-  const isGameOver = useGameStore((state) => state.isGameOver);
+  const { isGameOver, ballMovement } = useGameStore((state) => ({
+    isGameOver: state.isGameOver,
+    ballMovement: state.ballMovement,
+  }));
   return (
     <>
       <div data-testid="toggleGame" className="flex justify-center gap-2">
-        {!isGameOver  && (
+        {!isGameOver && (
           <>
-            <StartButton />
+            {!ballMovement ? <StartButton /> : <PauseButton />}
             <RestartButton />
             <ToggleLaser />
           </>
