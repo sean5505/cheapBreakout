@@ -15,19 +15,22 @@ export default function LevelTwoBlocks() {
   useEffect(() => {
     const populateBlocksArray = () => {
       const LevelThreeBlocks = [];
-      for (let x = 30; x <= 500; x += blockWidth) {
-        for (let y = 380; y <= 430; y += blockHeight) {
-          LevelThreeBlocks.push([x, y]);
-        }
-      }
-      for (let x = 30; x <= 500; x += blockWidth) {
-        for (let y = 470; y <= 500; y += blockHeight) {
-          LevelThreeBlocks.push([x, y]);
-        }
-      }
-      for (let x = 30; x <= 500; x += blockWidth) { //x<= 500
-        const y = 530;
+
+      for (let x = 2; x <= 32; x += blockWidth) {
+        const y = 33;
         LevelThreeBlocks.push([x, y]);
+      }
+
+      for (let x = 2; x <= 32; x += blockWidth) { 
+        for (let y = 29; y <= 31; y += blockHeight) {
+          LevelThreeBlocks.push([x, y]);
+        }
+      }
+
+      for (let x = 2; x <= 32; x += blockWidth) { 
+        for (let y = 23; y <= 27; y += blockHeight) {
+          LevelThreeBlocks.push([x, y]);
+        }
       }
       setBlocks(LevelThreeBlocks);
     };

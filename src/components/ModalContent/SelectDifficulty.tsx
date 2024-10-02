@@ -45,7 +45,7 @@ export default function SelectDifficulty() {
       {options.map((option) => (
         <div
           key={option.difficulty}
-          className="border-4 border-black w-full text-center rounded relative cursor-pointer hover:bg-slate-600 transition"
+          className="border-4 text-sm border-black w-full text-center rounded relative cursor-pointer hover:bg-slate-600 transition"
           onClick={() =>
             handleSelect(option.difficulty, option.value, option.scoreMultiply)
           }
@@ -53,7 +53,7 @@ export default function SelectDifficulty() {
         >
           <div className="">
             {option.difficulty}
-            <span className="text-xs absolute right-1 bottom-0">
+            <span className="text-xs max-ex-sm:text-xxs absolute right-1 bottom-0">
               x{option.scoreMultiply} score
             </span>
           </div>

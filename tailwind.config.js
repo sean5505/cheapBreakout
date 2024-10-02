@@ -5,17 +5,20 @@ export default {
   theme: {
     extend: {
       screens: {
-        'ex-sm': '468px',
+        'ex-sm': '500px',
       },
       width: {
-        '560' : '560px'
+        '146' : '36rem', // 576 px
       },
       height: {
-        '550' : '550px'
+        '144' : '35rem', // 560 px
 
+      },
+      fontSize: {
+        'xxs' : '.4rem'
       }
+      
     },
   },
   plugins: [],
 }
-

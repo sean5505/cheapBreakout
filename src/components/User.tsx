@@ -1,6 +1,6 @@
 import { useState, useEffect, RefObject } from "react";
 import { useGameStore } from "../stateManagement/Store";
-import MouseControl from "./MouseControl";
+import PointerControl from "./PointerControl";
 
 type Props = {
   boardRef: RefObject<HTMLDivElement>;
@@ -31,8 +31,8 @@ export default function User({ boardRef, userRef }: Props) {
 
   const drawUser = () => {
     if (userRef.current) {
-      userRef.current.style.left = `${position[0]}px`;
-      userRef.current.style.bottom = `${position[1]}px`;
+      userRef.current.style.left = `${position[0]}rem`;
+      userRef.current.style.bottom = `${position[1]}rem`;
     }
   };
 
@@ -40,13 +40,12 @@ export default function User({ boardRef, userRef }: Props) {
     switch (e.key) {
       case "ArrowLeft":
         if (position[0] > 0) {
-          setPosition([position[0] - 10, position[1]]);
+          setPosition([position[0] - 1, position[1]]);
         }
         break;
       case "ArrowRight":
         if (position[0] < boardWidth - userBlockWidth) {
-          //270 <560 - 50
-          setPosition([position[0] + 10, position[1]]);
+          setPosition([position[0] + 1, position[1]]);
         }
         break;
     }
@@ -81,7 +80,7 @@ export default function User({ boardRef, userRef }: Props) {
         className="absolute w-12 h-2 bg-black cursor-pointer rounded-full"
         ref={userRef}
       ></div>
-      <MouseControl
+      <PointerControl
         boardRef={boardRef}
         drawUser={drawUser}
         position={position}

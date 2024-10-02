@@ -14,18 +14,16 @@ export default function LevelOneBlocks() {
     const populateBlocksArray = () => {
       const LevelOneBlocks = [];
 
-      for (let x = 205; x <= 295; x += blockWidth) {
-        for (let y = 470; y <= 500; y += blockHeight) {
+      for (let x = 13; x <= 19; x += blockWidth) {
+        for (let y = 30; y <= 32; y += blockHeight) {
           LevelOneBlocks.push([x, y]);
         }
       }
-
-      for (let x = 115; x <= 385; x += blockWidth) {
-        for (let y = 380; y <= 440; y += blockHeight) {
+      for (let x = 8; x <= 24; x += blockWidth) {
+        for (let y = 24; y <= 28; y += blockHeight) {
           LevelOneBlocks.push([x, y]);
         }
-      } 
-
+      }
       setBlocks(LevelOneBlocks);
     };
 

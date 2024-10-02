@@ -78,7 +78,7 @@ export default function GameBoard() {
     <div
       data-testid="game-board"
       ref={boardRef}
-      className="h-550 w-560 border-black border-4 border-dotted relative "
+      className="h-144 w-146 border-black border-4 border-dotted relative "
       onClick={isGameOver || isLevelThreeCleared ? handleClick : undefined}
     >
       <>

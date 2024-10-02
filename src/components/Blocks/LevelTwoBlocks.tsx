@@ -13,18 +13,21 @@ export default function LevelTwoBlocks() {
   useEffect(() => {
     const populateBlocksArray = () => {
       const LevelTwoBlocks = [];
-      for (let x = 10; x <= 100; x += blockWidth) {
-        for (let y = 380; y <= 500; y += blockHeight) {
+      
+      for (let x = 1; x <= 7; x += blockWidth) {
+        for (let y = 24; y <= 32; y += blockHeight) {
           LevelTwoBlocks.push([x, y]);
         }
       }
-      for (let x = 205; x <= 295; x += blockWidth) {
-        for (let y = 380; y <= 500; y += blockHeight) {
+
+      for (let x = 14; x <= 21; x += blockWidth) {
+        for (let y = 24; y <= 32; y += blockHeight) {
           LevelTwoBlocks.push([x, y]);
         }
       }
-      for (let x = 420; x <= 520; x += blockWidth) {
-        for (let y = 380; y <= 500; y += blockHeight) {
+
+      for (let x = 26; x <= 33; x += blockWidth) {
+        for (let y = 24; y <= 32; y += blockHeight) {
           LevelTwoBlocks.push([x, y]);
         }
       }

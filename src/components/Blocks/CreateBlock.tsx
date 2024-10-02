@@ -7,7 +7,6 @@ const colors = [
   "#BA00FF",
   "#05CEFB",
   "#0528FB",
-  "#000000",
   "yellow",
   "teal",
   "pink",
@@ -23,8 +22,8 @@ export default function CreateBlock({block}: Props) {
 
   const drawBlock = () => {
     if (blockRef.current) {
-      blockRef.current.style.left = block.bottomLeft[0] + "px";
-      blockRef.current.style.bottom = block.bottomLeft[1] + "px";
+      blockRef.current.style.left = block.bottomLeft[0] + "rem";
+      blockRef.current.style.bottom = block.bottomLeft[1] + "rem";
       let randomColor = colors[Math.floor(Math.random() * colors.length)];
       blockRef.current.style.backgroundColor = randomColor;
     }
@@ -37,7 +36,7 @@ export default function CreateBlock({block}: Props) {
   return (
     <div
       ref={blockRef}
-      className="absolute w-8 h-3 border-solid border-2 border-black"
+      className="absolute w-8 h-4 border-solid border-2 border-black"
     ></div>
   );
 }

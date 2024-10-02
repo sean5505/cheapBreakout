@@ -12,8 +12,8 @@ export default function Ball({ballRef}: Props) {
 
   const drawBallF = () => {
     if (ballRef.current) {
-      ballRef.current.style.left = `${ballCurrentPosition[0]}px`;
-      ballRef.current.style.bottom = `${ballCurrentPosition[1]}px`;
+      ballRef.current.style.left = `${ballCurrentPosition[0]}rem`;
+      ballRef.current.style.bottom = `${ballCurrentPosition[1]}rem`;
     }
   };
 
